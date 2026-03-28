@@ -47,7 +47,7 @@ function EpisodeCard({ episode }: { episode: Episode }) {
             preload="metadata"
           >
             <source
-              src={`/podcast/audio/${episode.audioFile}`}
+              src={`/markus/podcast/audio/${episode.audioFile}`}
               type="audio/mpeg"
             />
             Ihr Browser unterstützt kein Audio-Element.
@@ -100,7 +100,7 @@ function EpisodeDetail({ episode }: { episode: Episode }) {
             preload="metadata"
           >
             <source
-              src={`/podcast/audio/${episode.audioFile}`}
+              src={`/markus/podcast/audio/${episode.audioFile}`}
               type="audio/mpeg"
             />
             Ihr Browser unterstützt kein Audio-Element.
@@ -154,7 +154,7 @@ function PodcastContent() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/podcast-data/episodes.json')
+    fetch('/markus/podcast-data/episodes.json')
       .then((res) => res.json())
       .then((data) => {
         setEpisodes(data);
