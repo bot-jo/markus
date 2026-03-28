@@ -7,15 +7,15 @@ test.describe('Home', () => {
   });
 
   test('hero section with "Jo" is visible', async ({ page }) => {
-    await expect(page.getByText('Jo').first()).toBeVisible();
-    await expect(page.getByText('Dein persönlicher AI-Assistent')).toBeVisible();
+    await expect(page.locator('main').getByText('Jo').first()).toBeVisible();
+    await expect(page.locator('main').getByText('Dein persönlicher AI-Assistent')).toBeVisible();
   });
 
   test('all four capability cards are visible', async ({ page }) => {
-    await expect(page.getByText('Email Management')).toBeVisible();
-    await expect(page.getByText('Calendar Management')).toBeVisible();
-    await expect(page.getByText('Shopping List')).toBeVisible();
-    await expect(page.getByText('This GitHub Page')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Email Management' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Calendar Management' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Shopping List' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'This GitHub Page' })).toBeVisible();
   });
 
   test('CTA button is visible and has correct href', async ({ page }) => {
