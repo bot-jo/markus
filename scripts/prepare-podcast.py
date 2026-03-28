@@ -3,8 +3,8 @@
 Automated Energy News Podcast Preparation Script
 
 Runs via cron on Mon/Wed/Fri at 06:00.
-Scrapes news from multiple sources, prepares a topic preview,
-and asks the user for approval before generating the episode.
+Scrapes news, prepares a topic preview, asks for approval,
+and stores everything in a cache file for the generate script.
 
 Usage:
     python3 prepare-podcast.py [--dry-run]
@@ -14,6 +14,7 @@ import json
 import os
 import sys
 import argparse
+import subprocess
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -22,23 +23,25 @@ from typing import Optional
 try:
     import feedparser
 except ImportError:
-    import subprocess
     subprocess.check_call([sys.executable, "-m", "pip", "install", "feedparser"])
     import feedparser
 
 try:
     import requests
 except ImportError:
-    import subprocess
     subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
     import requests
 
-from bs4 import BeautifulSoup
+try:
+    from bs4 import BeautifulSoup
+except ImportError:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "beautifulsoup4"])
+    from bs4 import BeautifulSoup
 
 # Configuration
 REPO_PATH = Path(__file__).parent.parent
-EPISODES_FILE = REPO_PATH / "content/podcast/episodes.json"
-AUDIO_DIR = REPO_PATH / "public/podcast/audio"
+CACHE_DIR = REPO_PATH / "scripts" / "cache"
+LOGS_DIR = REPO_PATH / "scripts" / "logs"
 OPENCLAW_SESSION = os.environ.get("OPENCLAW_SESSION", "main")
 
 # News sources with RSS feeds
@@ -118,7 +121,27 @@ SCRAPE_SOURCES = {
 }
 
 
-def fetch_rss_feed(source_name: str, source_config: dict) -> list[dict]:
+def setup_dirs():
+    """Ensure cache and logs directories exist."""
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    LOGS_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def get_logger(date_str: str):
+    """Create a logger for the given date."""
+    log_file = LOGS_DIR / f"podcast-{date_str}.log"
+    
+    def log(msg: str):
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        line = f"[{timestamp}] {msg}"
+        print(line)
+        with open(log_file, "a") as f:
+            f.write(line + "\n")
+    
+    return log
+
+
+def fetch_rss_feed(source_name: str, source_config: dict, log) -> list[dict]:
     """Fetch and parse RSS feed, filtering by keywords."""
     news_items = []
     try:
@@ -145,13 +168,14 @@ def fetch_rss_feed(source_name: str, source_config: dict) -> list[dict]:
                     "country": source_config["country"],
                     "summary": summary[:200] + "..." if len(summary) > 200 else summary,
                 })
+        log(f"Fetched {len(news_items)} items from {source_name}")
     except Exception as e:
-        print(f"Error fetching {source_name}: {e}")
+        log(f"Error fetching {source_name}: {e}")
 
     return news_items
 
 
-def scrape_webpage(source_name: str, source_config: dict) -> list[dict]:
+def scrape_webpage(source_name: str, source_config: dict, log) -> list[dict]:
     """Fallback: scrape webpage for news articles."""
     news_items = []
     try:
@@ -177,27 +201,26 @@ def scrape_webpage(source_name: str, source_config: dict) -> list[dict]:
                     "country": source_config["country"],
                     "summary": "",
                 })
+        log(f"Scraped {len(news_items)} items from {source_name}")
     except Exception as e:
-        print(f"Error scraping {source_name}: {e}")
+        log(f"Error scraping {source_name}: {e}")
 
     return news_items
 
 
-def scrape_all_news() -> list[dict]:
+def scrape_all_news(log) -> list[dict]:
     """Scrape news from all configured sources."""
     all_news = []
 
     # RSS feeds
     for source_name, source_config in RSS_SOURCES.items():
-        news = fetch_rss_feed(source_name, source_config)
+        news = fetch_rss_feed(source_name, source_config, log)
         all_news.extend(news)
-        print(f"Fetched {len(news)} items from {source_name}")
 
     # Web scraping fallback
     for source_name, source_config in SCRAPE_SOURCES.items():
-        news = scrape_webpage(source_name, source_config)
+        news = scrape_webpage(source_name, source_config, log)
         all_news.extend(news)
-        print(f"Scraped {len(news)} items from {source_name}")
 
     # Deduplicate by title
     seen_titles = set()
@@ -233,131 +256,138 @@ def generate_episode_metadata(news_items: list[dict], date_str: str) -> dict:
     summary = f"In dieser Episode besprechen wir {' und '.join(summary_parts)}. "
     summary += "Die Themen reichen von Photovoltaik-Ausbau über Windenergie bis hin zu internationalen Marktentwicklungen."
 
-    # Create transcript
-    transcript = f"""Willkommen zu den Energie News vom {date_str}.
-
-In today's episode, we cover the latest developments in the energy sector.
-"""
-
-    # Add top news items to transcript
-    for i, item in enumerate(news_items[:5], 1):
-        transcript += f"\n\n{i}. {item['title']}"
-        if item.get("summary"):
-            transcript += f"\n   {item['summary']}"
-
-    transcript += f"""
-
-Wir wünschen Ihnen viel Spaß beim Hören!
-"""
-
     return {
         "slug": date_str,
         "title": f"Energie News — {date_str}",
         "date": date_str,
-        "duration": "10:00",
+        "duration": "10:00",  # Will be updated after MP3 generation
         "summary": summary,
-        "transcript": transcript.strip(),
+        "transcript": "",  # Will be generated by MiniMax API
         "audioFile": f"{date_str}.mp3",
     }
 
 
 def load_episodes() -> list[dict]:
     """Load existing episodes from JSON file."""
-    if not EPISODES_FILE.exists():
+    episodes_file = REPO_PATH / "content" / "podcast" / "episodes.json"
+    if not episodes_file.exists():
         return []
-    with open(EPISODES_FILE, "r") as f:
+    with open(episodes_file, "r") as f:
+        return json.load(f)
+
+
+def save_cache(cache_data: dict, date_str: str) -> None:
+    """Save cache file for the generate script."""
+    cache_file = CACHE_DIR / f"podcast-{date_str}.json"
+    with open(cache_file, "w") as f:
+        json.dump(cache_data, f, ensure_ascii=False, indent=2)
+
+
+def load_cache(date_str: str) -> Optional[dict]:
+    """Load cache file if it exists."""
+    cache_file = CACHE_DIR / f"podcast-{date_str}.json"
+    if not cache_file.exists():
+        return None
+    with open(cache_file, "r") as f:
         return json.load(f)
 
 
 def save_episodes(episodes: list[dict]) -> None:
     """Save episodes to JSON file."""
-    EPISODES_FILE.parent.mkdir(parents=True, exist_ok=True)
-    with open(EPISODES_FILE, "w") as f:
+    episodes_file = REPO_PATH / "content" / "podcast" / "episodes.json"
+    episodes_file.parent.mkdir(parents=True, exist_ok=True)
+    with open(episodes_file, "w") as f:
         json.dump(episodes, f, ensure_ascii=False, indent=2)
 
 
-def send_approval_request(episode_preview: dict, news_count: int) -> None:
-    """Send approval request via OpenClaw."""
+def send_approval_request(episode_preview: dict, news_count: int, log) -> None:
+    """Send approval request and save cache."""
+    date_str = episode_preview["slug"]
+    
+    # Build preview text
     preview_text = f"""
 🎙️ *Neue Podcast-Episode zur Genehmigung*
 
 📅 *Datum:* {episode_preview['date']}
 📰 *Nachrichten:* {news_count} Artikel gesammelt
-⏱️ *Dauer:* {episode_preview['duration']}
+⏱️ *Dauer:* ~10 Minuten
 
 *Zusammenfassung:*
 {episode_preview['summary'][:200]}...
 
 ---
 
-Zum Genehmigen:
-`/approve-podcast {episode_preview['slug']}`
+Zum Genehmigen und Generieren:
+`/generate-podcast {date_str}`
 
 Zum Ablehnen:
-`/reject-podcast {episode_preview['slug']}`
+`/reject-podcast {date_str}`
 """
 
-    # Write to a pending approval file for OpenClaw to pick up
-    pending_file = REPO_PATH / ".pending-podcast-approval.json"
-    with open(pending_file, "w") as f:
-        json.dump({
-            "episode": episode_preview,
-            "news_count": news_count,
-            "created_at": datetime.now().isoformat(),
-        }, f, ensure_ascii=False, indent=2)
+    # Save cache with pending status
+    cache_data = {
+        "status": "pending",
+        "episode": episode_preview,
+        "news_items": [],
+        "created_at": datetime.now().isoformat(),
+        "approved_at": None,
+        "completed_at": None,
+        "error": None,
+    }
+    save_cache(cache_data, date_str)
 
+    log(f"Approval request saved for {date_str}")
     print(preview_text)
-    print(f"\n[Approval request saved to {pending_file}]")
-    print("Waiting for user approval...")
+    print(f"\nWaiting for user approval...")
 
 
 def main():
     parser = argparse.ArgumentParser(description="Prepare energy news podcast episode")
     parser.add_argument("--dry-run", action="store_true", help="Run without sending approval request")
-    parser.add_argument("--force", action="store_true", help="Skip approval and generate directly")
     args = parser.parse_args()
+
+    setup_dirs()
 
     today = datetime.now()
     date_str = today.strftime("%Y-%m-%d")
 
-    print(f"=== Podcast Preparation Script ===")
-    print(f"Date: {date_str}")
-    print(f"Dry run: {args.dry_run}")
-    print()
+    log = get_logger(date_str)
+    log(f"=== Podcast Preparation Script ===")
+    log(f"Date: {date_str}")
+    log(f"Dry run: {args.dry_run}")
 
     # Check if episode already exists
     episodes = load_episodes()
     if any(ep["slug"] == date_str for ep in episodes):
-        print(f"Episode for {date_str} already exists!")
+        log(f"Episode for {date_str} already exists!")
+        sys.exit(0)
+
+    # Check if cache already exists
+    existing_cache = load_cache(date_str)
+    if existing_cache and existing_cache.get("status") in ["pending", "approved", "completed"]:
+        log(f"Cache for {date_str} already exists with status: {existing_cache.get('status')}")
         sys.exit(0)
 
     # Scrape news
-    print("Scraping news from all sources...")
-    news_items = scrape_all_news()
-    print(f"Total unique news items: {len(news_items)}")
+    log("Scraping news from all sources...")
+    news_items = scrape_all_news(log)
+    log(f"Total unique news items: {len(news_items)}")
 
-    if not news_items:
-        print("No news items found. Aborting.")
+    if len(news_items) < 3:
+        log(f"Error: Only {len(news_items)} articles found (minimum 3 required)")
         sys.exit(1)
 
     # Generate episode preview
     episode_preview = generate_episode_metadata(news_items, date_str)
-    print(f"\nEpisode preview generated:")
-    print(f"  Title: {episode_preview['title']}")
-    print(f"  Summary: {episode_preview['summary'][:100]}...")
+    log(f"Episode preview generated: {episode_preview['title']}")
 
     if args.dry_run:
-        print("\n[Dry run - no approval request sent]")
+        log("[Dry run - no approval request sent]")
         sys.exit(0)
 
-    if args.force:
-        # Directly add episode without approval
-        episodes.append(episode_preview)
-        save_episodes(episodes)
-        print(f"\nEpisode added and saved to {EPISODES_FILE}")
-    else:
-        # Send approval request
-        send_approval_request(episode_preview, len(news_items))
+    # Send approval request
+    send_approval_request(episode_preview, len(news_items), log)
+    log("Approval request sent. Waiting for user response.")
 
 
 if __name__ == "__main__":
