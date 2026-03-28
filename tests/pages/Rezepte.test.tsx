@@ -70,73 +70,92 @@ describe('RecipeList tag filtering', () => {
     const { default: RecipeList } = await import('@/components/RecipeList');
     render(<RecipeList recipes={mockRecipes} allTags={allTags} />);
     const pills = screen.getAllByRole('button');
-    // There are 3 filter pills + recipe card tag buttons = 3 + 2 (pasta) + 2 (pizza) + 1 (burger) = 8
     expect(pills.length).toBeGreaterThanOrEqual(3);
   });
 
-  it('shows active filter indicator when tag is selected', async () => {
+  it('shows active filter summary when tags are selected', async () => {
     const { useSearchParams } = await import('next/navigation');
-    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('tag=italienisch'));
+    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('tags=italienisch'));
 
     const { default: RecipeList } = await import('@/components/RecipeList');
     render(<RecipeList recipes={mockRecipes} allTags={allTags} />);
 
-    expect(screen.getByText(/Rezepte mit Tag:/)).toBeInTheDocument();
-    expect(screen.getByText('Alle Rezepte anzeigen →')).toBeInTheDocument();
+    expect(screen.getByText(/Zeige Rezepte mit:/)).toBeInTheDocument();
+    expect(screen.getAllByText('italienisch').length).toBeGreaterThan(0);
+    expect(screen.getByText('Filter zurücksetzen ✕')).toBeInTheDocument();
   });
 
-  it('shows empty state when no recipes match tag', async () => {
+  it('shows empty state when no recipes match tag combination', async () => {
     const { useSearchParams } = await import('next/navigation');
-    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('tag=unbekannt'));
+    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('tags=unbekannt'));
 
     const { default: RecipeList } = await import('@/components/RecipeList');
     render(<RecipeList recipes={mockRecipes} allTags={allTags} />);
 
-    expect(
-      screen.getByText(/Keine Rezepte mit dem Tag "unbekannt" gefunden/)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Keine Rezepte gefunden/)).toBeInTheDocument();
+    expect(screen.getByText('Filter zurücksetzen →')).toBeInTheDocument();
   });
 
-  it('clears filter and navigates when "Alle Rezepte anzeigen" is clicked', async () => {
+  it('clears filter and navigates when "Filter zurücksetzen" is clicked', async () => {
     const { useSearchParams } = await import('next/navigation');
-    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('tag=italienisch'));
+    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('tags=italienisch'));
 
     const { default: RecipeList } = await import('@/components/RecipeList');
     render(<RecipeList recipes={mockRecipes} allTags={allTags} />);
 
-    fireEvent.click(screen.getByText('Alle Rezepte anzeigen →'));
+    fireEvent.click(screen.getByText('Filter zurücksetzen ✕'));
     expect(pushMock).toHaveBeenCalledWith('/rezepte');
   });
 
   it('highlights active tag pill when tag is selected', async () => {
     const { useSearchParams } = await import('next/navigation');
-    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('tag=italienisch'));
+    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('tags=italienisch'));
 
     const { default: RecipeList } = await import('@/components/RecipeList');
     render(<RecipeList recipes={mockRecipes} allTags={allTags} />);
 
-    // Find the italian filter pill in the filter section (first 3 buttons are the filter pills)
     const pills = screen.getAllByRole('button');
-    const italianPill = pills.find(
-      (btn) => btn.textContent === 'italienisch' && btn.className.includes('text-sm')
-    );
-    expect(italianPill).toBeDefined();
+    const italianPill = pills.find((btn) => btn.textContent === 'italienisch');
     expect(italianPill?.className).toContain('bg-cyan-500');
   });
 
-  it('filters recipes by clicking a tag pill', async () => {
+  it('adds tag to URL when clicking a tag pill', async () => {
     const { useSearchParams } = await import('next/navigation');
     (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams());
 
     const { default: RecipeList } = await import('@/components/RecipeList');
     render(<RecipeList recipes={mockRecipes} allTags={allTags} />);
 
-    // Click the amerikanisch filter pill (find it by text and filter-pill class)
     const pills = screen.getAllByRole('button');
-    const amerikanischPill = pills.find(
-      (btn) => btn.textContent === 'amerikanisch' && btn.className.includes('text-sm')
-    );
+    const amerikanischPill = pills.find((btn) => btn.textContent === 'amerikanisch');
     fireEvent.click(amerikanischPill!);
-    expect(pushMock).toHaveBeenCalledWith('/rezepte?tag=amerikanisch');
+    expect(pushMock).toHaveBeenCalledWith('/rezepte?tags=amerikanisch');
+  });
+
+  it('applies AND filter when two tags are selected', async () => {
+    const { useSearchParams } = await import('next/navigation');
+    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('tags=italienisch,vegetarisch'));
+
+    const { default: RecipeList } = await import('@/components/RecipeList');
+    render(<RecipeList recipes={mockRecipes} allTags={allTags} />);
+
+    // Both pasta and pizza have both tags, burger has none
+    expect(screen.getByText('Pasta')).toBeInTheDocument();
+    expect(screen.getByText('Pizza')).toBeInTheDocument();
+    expect(screen.queryByText('Burger')).not.toBeInTheDocument();
+    expect(screen.getByText(/\(2 Tags aktiv\)/)).toBeInTheDocument();
+  });
+
+  it('removes tag from filter when clicking an active tag', async () => {
+    const { useSearchParams } = await import('next/navigation');
+    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('tags=italienisch,vegetarisch'));
+
+    const { default: RecipeList } = await import('@/components/RecipeList');
+    render(<RecipeList recipes={mockRecipes} allTags={allTags} />);
+
+    const pills = screen.getAllByRole('button');
+    const italianPill = pills.find((btn) => btn.textContent === 'italienisch');
+    fireEvent.click(italianPill!);
+    expect(pushMock).toHaveBeenCalledWith('/rezepte?tags=vegetarisch');
   });
 });

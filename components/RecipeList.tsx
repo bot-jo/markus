@@ -21,24 +21,30 @@ interface RecipeListProps {
 export default function RecipeList({ recipes, allTags }: RecipeListProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const activeTag = searchParams.get('tag') || '';
 
-  const filteredRecipes = activeTag
-    ? recipes.filter((r) => r.tags.includes(activeTag))
+  const tagsParam = searchParams.get('tags') || '';
+  const activeTags: string[] = tagsParam ? tagsParam.split(',').filter(Boolean) : [];
+
+  const filteredRecipes = activeTags.length > 0
+    ? recipes.filter((r) => activeTags.every((tag) => r.tags.includes(tag)))
     : recipes;
 
-  const handleTagClick = (tag: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (activeTag === tag) {
-      params.delete('tag');
+  const toggleTag = (tag: string) => {
+    const params = new URLSearchParams();
+    let newActiveTags: string[];
+    if (activeTags.includes(tag)) {
+      newActiveTags = activeTags.filter((t) => t !== tag);
     } else {
-      params.set('tag', tag);
+      newActiveTags = [...activeTags, tag];
+    }
+    if (newActiveTags.length > 0) {
+      params.set('tags', newActiveTags.join(','));
     }
     const query = params.toString();
     router.push(`/rezepte${query ? `?${query}` : ''}`);
   };
 
-  const handleClearFilter = () => {
+  const clearAll = () => {
     router.push('/rezepte');
   };
 
@@ -46,47 +52,61 @@ export default function RecipeList({ recipes, allTags }: RecipeListProps) {
     <div>
       {/* Tag Filter Pills */}
       {allTags.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-6">
-          {allTags.map((tag) => {
-            const isActive = activeTag === tag;
-            return (
-              <button
-                key={tag}
-                onClick={() => handleTagClick(tag)}
-                className={`text-sm px-3 py-1.5 rounded-full transition-colors ${
-                  isActive
-                    ? 'bg-cyan-500 text-black font-medium'
-                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
-                }`}
-              >
-                {tag}
-              </button>
-            );
-          })}
+        <div className="mb-6">
+          <p className="text-sm text-gray-500 mb-2">Nach Tags filtern:</p>
+          <div className="flex flex-wrap gap-2">
+            {allTags.map((tag) => {
+              const isActive = activeTags.includes(tag);
+              return (
+                <button
+                  key={tag}
+                  onClick={() => toggleTag(tag)}
+                  className={`text-sm px-3 py-1.5 rounded-full border transition-colors ${
+                    isActive
+                      ? 'bg-cyan-500 border-cyan-500 text-black font-medium'
+                      : 'border-gray-700 text-gray-300 hover:border-gray-500 hover:text-white bg-transparent'
+                  }`}
+                >
+                  {tag}
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
 
-      {/* Active Filter Indicator */}
-      {activeTag && (
-        <div className="flex items-center gap-3 mb-6 text-sm">
+      {/* Active Filter Summary */}
+      {activeTags.length > 0 && (
+        <div className="flex flex-wrap items-center gap-3 mb-6 text-sm">
           <span className="text-gray-400">
-            Rezepte mit Tag: <span className="text-cyan-400 font-medium">{activeTag}</span>
+            Zeige Rezepte mit:{' '}
+            <span className="text-cyan-400 font-medium">{activeTags.join(', ')}</span>
           </span>
+          {activeTags.length > 1 && (
+            <span className="text-gray-600">({activeTags.length} Tags aktiv)</span>
+          )}
           <button
-            onClick={handleClearFilter}
-            className="text-cyan-400 hover:text-cyan-300 hover:underline"
+            onClick={clearAll}
+            className="ml-auto text-cyan-400 hover:text-cyan-300 hover:underline flex items-center gap-1"
           >
-            Alle Rezepte anzeigen →
+            Filter zurücksetzen ✕
           </button>
         </div>
       )}
 
       {/* Recipe Grid */}
-      {filteredRecipes.length === 0 ? (
+      {filteredRecipes.length === 0 && activeTags.length > 0 ? (
         <div className="text-center py-16">
-          <p className="text-gray-400 text-lg">
-            Keine Rezepte mit dem Tag &quot;{activeTag}&quot; gefunden.
+          <p className="text-gray-400 text-lg mb-3">
+            Keine Rezepte gefunden für:{' '}
+            <span className="text-cyan-400">{activeTags.join(', ')}</span>
           </p>
+          <button
+            onClick={clearAll}
+            className="text-cyan-400 hover:text-cyan-300 hover:underline"
+          >
+            Filter zurücksetzen →
+          </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -99,22 +119,26 @@ export default function RecipeList({ recipes, allTags }: RecipeListProps) {
               <h2 className="text-xl font-semibold text-cyan-400 mb-2">{recipe.title}</h2>
               <p className="text-gray-400 text-sm mb-4">{recipe.description}</p>
               <div className="flex flex-wrap gap-2 mb-3">
-                {recipe.tags.map((tag) => (
-                  <button
-                    key={tag}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleTagClick(tag);
-                    }}
-                    className={`text-xs px-2 py-1 rounded transition-colors ${
-                      activeTag === tag
-                        ? 'bg-cyan-500 text-black'
-                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                    }`}
-                  >
-                    {tag}
-                  </button>
-                ))}
+                {recipe.tags.map((tag) => {
+                  const isActive = activeTags.includes(tag);
+                  return (
+                    <button
+                      key={tag}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleTag(tag);
+                      }}
+                      className={`text-xs px-2 py-1 rounded border transition-colors ${
+                        isActive
+                          ? 'bg-cyan-500 border-cyan-500 text-black'
+                          : 'border-gray-700 text-gray-300 hover:border-gray-500 bg-transparent'
+                      }`}
+                    >
+                      {tag}
+                    </button>
+                  );
+                })}
               </div>
               <div className="text-xs text-gray-500 flex gap-4">
                 <span>⏱ {recipe.prepTime}</span>
