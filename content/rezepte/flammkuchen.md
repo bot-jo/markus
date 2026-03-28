@@ -4,7 +4,6 @@ description: "Klassischer Flammkuchen mit Speck, Lauch und Zwiebeln auf knusprig
 servings: 4
 prepTime: "40 Minuten"
 tags: ["Hauptgericht"]
-source: "https://schwarz69.wordpress.com/2025/02/05/flammkuchen/"
 ---
 
 ## Beschreibung

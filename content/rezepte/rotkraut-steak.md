@@ -4,7 +4,6 @@ description: "Saftig gebackenes Rotkraut mit Feta, Kartoffelspalten und honig-sa
 servings: 4
 prepTime: "70 Minuten"
 tags: ["Hauptgericht", "Vegetarisch"]
-source: "https://schwarz69.wordpress.com/2025/02/15/rotkraut-steak/"
 ---
 
 ## Beschreibung

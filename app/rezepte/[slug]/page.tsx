@@ -13,7 +13,6 @@ interface RecipeFrontmatter {
   servings?: number;
   prepTime?: string;
   tags?: string[];
-  source?: string;
   date?: string;
 }
 
@@ -133,19 +132,6 @@ export default async function RecipePage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: content }}
       />
 
-      {/* Source link */}
-      {data.source && (
-        <div className="mt-8 pt-6 border-t border-gray-800">
-          <a
-            href={data.source}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-gray-500 hover:text-cyan-400 transition-colors"
-          >
-            Quelle: {data.source.replace(/^https?:\/\//, '').split('/')[0]}
-          </a>
-        </div>
-      )}
     </div>
   );
 }

@@ -4,7 +4,6 @@ description: "Klassisches thailändisches Pad Thai mit Reisnudeln, Tofu, Gemüse
 servings: 2
 prepTime: "35 Minuten"
 tags: ["Hauptgericht", "Vegetarisch"]
-source: "https://schwarz69.wordpress.com/2025/03/11/pad-thai/"
 ---
 
 ## Beschreibung

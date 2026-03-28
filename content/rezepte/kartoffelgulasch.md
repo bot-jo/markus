@@ -4,7 +4,6 @@ description: "Herzhaftes Kartoffelgulasch mit Paprika, Tomaten und deftigen Gew√
 servings: 4
 prepTime: "50 Minuten"
 tags: ["Hauptgericht", "Vegetarisch"]
-source: "https://schwarz69.wordpress.com/2025/02/05/kartoffelgulasch/"
 ---
 
 ## Beschreibung

@@ -4,7 +4,6 @@ description: "Cremiger Hummus mit Kichererbsen, Tahini, Knoblauch und Zitrone. B
 servings: 6
 prepTime: "10 Minuten"
 tags: ["Dip", "Vegetarisch", "Vegan"]
-source: "https://schwarz69.wordpress.com/2025/02/06/humus/"
 ---
 
 ## Beschreibung

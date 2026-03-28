@@ -4,7 +4,6 @@ description: "Cremiges Sellerie Püree mit Schalotten, Knoblauch und Schlagobers
 servings: 4
 prepTime: "35 Minuten"
 tags: ["Beilage", "Vegetarisch"]
-source: "https://schwarz69.wordpress.com/2025/02/05/sellerie-puree/"
 ---
 
 ## Beschreibung

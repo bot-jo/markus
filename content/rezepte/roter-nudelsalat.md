@@ -4,7 +4,6 @@ description: "Farbenfroher Nudelsalat mit Fusili, getrockneten Tomaten, Kirschto
 servings: 4
 prepTime: "25 Minuten"
 tags: ["Hauptgericht", "Vegetarisch"]
-source: "https://schwarz69.wordpress.com/2025/08/08/roter-nudelsalat/"
 ---
 
 ## Beschreibung

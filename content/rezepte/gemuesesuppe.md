@@ -4,7 +4,6 @@ description: "Deftige Gemüsesuppe aus eingefrorenen Gemüseresten, Shiitakepilz
 servings: 6
 prepTime: "60 Minuten"
 tags: ["Suppe", "Vegetarisch"]
-source: "https://schwarz69.wordpress.com/2025/02/05/kartoffelgulasch-2/"
 ---
 
 ## Beschreibung
