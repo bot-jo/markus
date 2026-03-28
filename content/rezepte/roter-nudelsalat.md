@@ -1,12 +1,15 @@
 ---
 title: "Roter Nudelsalat"
 description: "Farbenfroher Nudelsalat mit Fusili, getrockneten Tomaten, Kirschtomaten, Feta und Pinienkernen. Mit Balsamico-Olivenöl-Dressing und frischem Basilikum."
-date: "2025-08-08"
-servings: null
-prepTime: null
+servings: 4
+prepTime: "25 Minuten"
 tags: ["Hauptgericht", "Vegetarisch"]
 source: "https://schwarz69.wordpress.com/2025/08/08/roter-nudelsalat/"
 ---
+
+## Beschreibung
+
+Ein farbenfroher Nudelsalat mit fusili, der durch getrocknete Tomaten, frische Kirschtomaten und würzigen Feta besonders lecker schmeckt. Die Pinienkerne geben dem Salat einen nussigen Crunch, während das Dressing aus Balsamico-Essig, Olivenöl und braunem Zucker eine süßlich-würzige Note hinzufügt. Frisches Basilikum rundet das Ganze ab.
 
 ## Zutaten
 
@@ -31,3 +34,7 @@ source: "https://schwarz69.wordpress.com/2025/08/08/roter-nudelsalat/"
 2. Tomaten halbieren und Feta würfeln.
 3. Flüssige Zutaten mit braunen Zucker vermengen und gut durchrühren.
 4. Alle Zutaten zusammenmischen.
+
+## Anmerkungen
+
+Guten Appetit!

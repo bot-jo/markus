@@ -1,4 +1,4 @@
-// Linked to: US-009
+// Linked to: US-009, US-017, US-018
 import { render, screen } from '@testing-library/react';
 
 // Mock remark and remark-html before importing the page
@@ -7,7 +7,8 @@ jest.mock('remark', () => {
     remark: jest.fn(() => ({
       use: jest.fn().mockReturnThis(),
       process: jest.fn().mockResolvedValue({
-        toString: () => '<h2>Zutaten</h2><h2>Zubereitung</h2>',
+        toString: () =>
+          '<h2>Beschreibung</h2><p>Ein einfaches Beispielrezept zum Testen.</p><h2>Zutaten</h2><ul><li>200g Nudeln</li><li>1 Zwiebel</li><li>Salz, Pfeffer</li></ul><h2>Zubereitung</h2><ol><li>Wasser kochen</li><li>Nudeln kochen</li><li>Servieren</li></ol><h2>Anmerkungen</h2><p>Guten Appetit!</p>',
       }),
     })),
   };
@@ -30,6 +31,10 @@ prepTime: "30 Minuten"
 tags: ["Beispiel", "Einfach"]
 ---
 
+## Beschreibung
+
+Ein einfaches Beispielrezept zum Testen.
+
 ## Zutaten
 - 200g Nudeln
 - 1 Zwiebel
@@ -38,7 +43,11 @@ tags: ["Beispiel", "Einfach"]
 ## Zubereitung
 1. Wasser kochen
 2. Nudeln kochen
-3. Servieren`;
+3. Servieren
+
+## Anmerkungen
+
+Guten Appetit!`;
     }
     return '';
   }),
@@ -54,17 +63,18 @@ describe('RezepteDetail', () => {
     expect(screen.getByText('Beispiel Rezept')).toBeInTheDocument();
   });
 
-  it('renders recipe metadata: servings, prepTime, date', async () => {
+  it('renders all five sections: Beschreibung, Zutaten, Zubereitung, Anmerkungen', async () => {
     render(await RecipeDetailPage({ params: mockParams }));
-    expect(screen.getByText(/2025-01-01/)).toBeInTheDocument();
-    expect(screen.getByText(/30 Minuten/)).toBeInTheDocument();
-    expect(screen.getByText(/Portionen/)).toBeInTheDocument();
-  });
-
-  it('renders recipe body content as HTML', async () => {
-    render(await RecipeDetailPage({ params: mockParams }));
+    expect(screen.getByText('Beschreibung')).toBeInTheDocument();
     expect(screen.getByText('Zutaten')).toBeInTheDocument();
     expect(screen.getByText('Zubereitung')).toBeInTheDocument();
+    expect(screen.getByText('Anmerkungen')).toBeInTheDocument();
+  });
+
+  it('renders recipe metadata: prepTime and servings', async () => {
+    render(await RecipeDetailPage({ params: mockParams }));
+    expect(screen.getByText('30 Minuten')).toBeInTheDocument();
+    expect(screen.getByText(/4.*Portionen|4 Portionen/)).toBeInTheDocument();
   });
 
   it('renders back link to /rezepte', async () => {

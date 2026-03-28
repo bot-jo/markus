@@ -1,12 +1,15 @@
 ---
 title: "Humus"
 description: "Cremiger Hummus mit Kichererbsen, Tahini, Knoblauch und Zitrone. Blitzschnell im Mixer zubereitet."
-date: "2025-02-06"
-servings: null
-prepTime: null
+servings: 6
+prepTime: "10 Minuten"
 tags: ["Dip", "Vegetarisch", "Vegan"]
 source: "https://schwarz69.wordpress.com/2025/02/06/humus/"
 ---
+
+## Beschreibung
+
+Dieser cremige Hummus ist in wenigen Minuten zubereitet und überzeugt durch die Kombination aus Kichererbsen, samtigem Tahini, frischem Knoblauch und Zitronensaft. Die Zugabe von eiskaltem Wasser sorgt für eine besonders luftig-leichte Konsistenz. Perfekt als Dip zu Fladenbrot, Gemüsesticks oder als Bowl-Topping.
 
 ## Zutaten
 
@@ -29,4 +32,6 @@ source: "https://schwarz69.wordpress.com/2025/02/06/humus/"
 1. Kichererbsen abtropfen, Knoblauchzehen klein schneiden, Zitrone auspressen.
 2. Alle Zutaten und Kräuter in einen Mixer geben und so lange mixen bis eine homogene Masse entsteht.
 
-> Achtung: Der Humus darf nicht zu warm werden.
+## Anmerkungen
+
+Achtung: Der Humus darf nicht zu warm werden.

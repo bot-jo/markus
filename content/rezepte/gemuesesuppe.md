@@ -1,12 +1,15 @@
 ---
 title: "Gemüsesuppe"
 description: "Deftige Gemüsesuppe aus eingefrorenen Gemüseresten, Shiitakepilzen und wärmenden Gewürzen. Ideal als Basis für Kartoffelgulasch oder Nudelsuppe."
-date: "2025-02-05"
-servings: null
-prepTime: null
+servings: 6
+prepTime: "60 Minuten"
 tags: ["Suppe", "Vegetarisch"]
 source: "https://schwarz69.wordpress.com/2025/02/05/kartoffelgulasch-2/"
 ---
+
+## Beschreibung
+
+Eine deftige Gemüsesuppe, die perfekt ist, um Gemüsereste zu verwerten. Eingefrorene Schalen und Abschnitte von Zwiebel, Karotten, Sellerie und Lauch bilden die Basis, ergänzt durch frische Shiitakepilze und wärmende Gewürze wie Ingwer, Lorbeer, Wacholderbeeren und Nelken. Die Suppe eignet sich hervorragend als Basis für Kartoffelgulasch oder als Nudelsuppe.
 
 ## Zutaten
 
@@ -35,4 +38,6 @@ source: "https://schwarz69.wordpress.com/2025/02/05/kartoffelgulasch-2/"
 4. Suppe durch Sieb schütten.
 5. Suppe mit Salz, Sesamöl und Shoyu abschmecken.
 
-> Suppe für andere Gerichte verwenden wie z.B. Kartoffelgulasch oder als Nudelsuppe mit Schnittlauch und geriebener Karotte servieren.
+## Anmerkungen
+
+Suppe für andere Gerichte verwenden wie z.B. Kartoffelgulasch oder als Nudelsuppe mit Schnittlauch und geriebener Karotte servieren.

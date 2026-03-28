@@ -1,12 +1,15 @@
 ---
 title: "Flammkuchen"
 description: "Klassischer Flammkuchen mit Speck, Lauch und Zwiebeln auf knusprigem Teig. Mit Sauerrahm-Senf-Mischung verfeinert."
-date: "2025-02-05"
-servings: null
-prepTime: null
+servings: 4
+prepTime: "40 Minuten"
 tags: ["Hauptgericht"]
 source: "https://schwarz69.wordpress.com/2025/02/05/flammkuchen/"
 ---
+
+## Beschreibung
+
+Flammkuchen ist ein klassisches Gericht aus dem Elsass – ein dünn ausgewallter Teig mit einer cremigen Sauerrahm-Schmand-Mischung, knusprigem Speck, Lauch und Zwiebeln. Der Belag kann nach Belieben variiert werden, von klassisch mit Speck bis hin zu vegetarisch mit Gemüse.
 
 ## Zutaten
 
@@ -34,4 +37,6 @@ source: "https://schwarz69.wordpress.com/2025/02/05/flammkuchen/"
 5. Teig ausrollen und mit Sauerrahmgemisch bestreichen. Danach mit angebratenen Zutaten belegen.
 6. Ca. 20 Minuten backen bis der Rand vom Teig goldbraun ist.
 
-> Belag kann beliebig geändert werden.
+## Anmerkungen
+
+Belag kann beliebig geändert werden.

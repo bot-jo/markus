@@ -1,12 +1,15 @@
 ---
 title: "Sellerie Püree"
 description: "Cremiges Sellerie Püree mit Schalotten, Knoblauch und Schlagobers. Mit frischen Kräutern und Muskatnuss verfeinert."
-date: "2025-02-05"
-servings: null
-prepTime: null
+servings: 4
+prepTime: "35 Minuten"
 tags: ["Beilage", "Vegetarisch"]
 source: "https://schwarz69.wordpress.com/2025/02/05/sellerie-puree/"
 ---
+
+## Beschreibung
+
+Ein cremiges Sellerie Püree, das durch die Kombination von Schlagobers und Gemüsesuppe eine samtige Konsistenz bekommt. Schalotten und Knoblauch werden in Butter angeschwitzt und verleihen dem Püree eine milde, aromatische Grundnote. Mit frischen Kräutern und geriebener Muskatnuss abgeschmeckt, ist es die perfekte Beilage zu vielen Hauptgerichten.
 
 ## Zutaten
 
@@ -32,4 +35,6 @@ source: "https://schwarz69.wordpress.com/2025/02/05/sellerie-puree/"
 4. Deckel entfernen und Flüssigkeit bis auf ein Minimum reduzieren.
 5. Mixen und danach Gewürze hinzufügen.
 
-> Optional: Püree mit brauner Butter verfeinern.
+## Anmerkungen
+
+Optional: Püree mit brauner Butter verfeinern.

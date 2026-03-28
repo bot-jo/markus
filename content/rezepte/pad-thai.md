@@ -1,12 +1,15 @@
 ---
 title: "Pad Thai"
 description: "Klassisches thailändisches Pad Thai mit Reisnudeln, Tofu, Gemüse und einer perfekt abgeschmeckten Sauce aus Tamarinde, Sojasauce und braunem Zucker."
-date: "2025-03-11"
-servings: null
-prepTime: null
+servings: 2
+prepTime: "35 Minuten"
 tags: ["Hauptgericht", "Vegetarisch"]
 source: "https://schwarz69.wordpress.com/2025/03/11/pad-thai/"
 ---
+
+## Beschreibung
+
+Authentisches Pad Thai mit einer perfekt abgeschmeckten Sauce aus Tamarinde, Sojasauce und braunem Zucker. Die Reisnudeln werden schön al dente gekocht und mit Tofu, Gemüse und Eiern in der Pfanne geschwenkt. Frische Mungobohnensprossen, Lauch und Koriander geben dem Gericht den letzten Schliff. Mit Limettenspalten und Erdnüssen servieren.
 
 ## Zutaten
 
@@ -41,3 +44,7 @@ source: "https://schwarz69.wordpress.com/2025/03/11/pad-thai/"
 6. Karotten und Champignons mit 1 EL Rapsöl und viel Hitze 1-2 Minuten anbraten. Danach alles aus der Pfanne entfernen.
 7. Reisnudeln mit Sauce in die Pfanne geben (mittlere Hitze). Ca. 1 Minute bei permanenten Umrühren anbraten. Danach die zuvor angebratenen Lebensmittel hinzufügen. Ebenso Mungobohnensprossen und Lauch hinzufügen.
 8. Anrichten mit frisch gehackter Petersilie und Nüssen.
+
+## Anmerkungen
+
+Guten Appetit!
