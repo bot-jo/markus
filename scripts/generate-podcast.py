@@ -21,6 +21,10 @@ import argparse
 import subprocess
 from datetime import datetime
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Try to import required libraries
 try:
@@ -101,51 +105,37 @@ def update_cache_status(date_str: str, status: str, error: str = None) -> None:
     save_cache(cache, date_str)
 
 
-def generate_transcript(news_items: list[dict], date_str: str, log) -> str:
-    """Generate full transcript using MiniMax API."""
-    if not MINIMAX_API_KEY:
-        log("Warning: MINIMAX_API_KEY not set, using template transcript")
-        return generate_template_transcript(news_items, date_str)
+def generate_transcript(date_str: str, log) -> str:
+    """Read transcript from cache file (written by OpenClaw bot)."""
+    transcript_file = CACHE_DIR / f"podcast-{date_str}-transcript.txt"
     
-    log("Generating transcript with MiniMax API...")
+    if not transcript_file.exists():
+        log(f"Transcript file not found: {transcript_file}")
+        log("Please write the transcript using the OpenClaw bot first.")
+        log(f"Read the prompt from: {CACHE_DIR / f'podcast-{date_str}-prompt.txt'}")
+        sys.exit(1)
     
-    # Build news context
-    news_context = "\n".join([
-        f"- {item['title']} ({item.get('source', 'Unknown')}, {item.get('country', 'INT')})"
-        for item in news_items[:10]
-    ])
+    with open(transcript_file, "r") as f:
+        transcript = f.read().strip()
     
-    prompt = f"""Erstelle ein Transkript für einen Energie-News-Podcast auf Deutsch.
+    log(f"Transcript loaded from {transcript_file} ({len(transcript)} chars)")
+    return transcript
 
-Datum: {date_str}
 
-Nachrichtenquellen:
-{news_context}
-
-Das Transkript sollte:
-- Mit einer Begrüßung beginnen
-- Die wichtigsten Nachrichten in 2-3 Absätzen zusammenfassen
-- Auf Deutsch sein, etwa 400-600 Wörter
-- Natürlich klingen wie ein Podcast-Skript
-- Mit einem Abschied enden
-
-Gib nur das Transkript zurück, ohne zusätzliche Formatierung."""
-
-    try:
-        client = Anthropic(api_key=MINIMAX_API_KEY)
-        response = client.messages.create(
-            model="minimax/MiniMax-M2.7",
-            max_tokens=2000,
-            messages=[
-                {"role": "user", "content": prompt}
-            ]
-        )
-        transcript = response.content[0].text
-        log(f"Transcript generated ({len(transcript)} chars)")
-        return transcript
-    except Exception as e:
-        log(f"MiniMax API error: {e}, using template")
-        return generate_template_transcript(news_items, date_str)
+def generate_summary(date_str: str, log) -> str:
+    """Read summary from cache file (written by OpenClaw bot)."""
+    summary_file = CACHE_DIR / f"podcast-{date_str}-summary.txt"
+    
+    if not summary_file.exists():
+        log(f"Summary file not found: {summary_file}")
+        log("Please write the summary using the OpenClaw bot first.")
+        sys.exit(1)
+    
+    with open(summary_file, "r") as f:
+        summary = f.read().strip()
+    
+    log(f"Summary loaded from {summary_file}")
+    return summary
 
 
 def generate_template_transcript(news_items: list[dict], date_str: str) -> str:
@@ -169,73 +159,70 @@ In dieser Episode besprechen wir die wichtigsten Nachrichten aus der Energiewirt
     return transcript
 
 
-def generate_summary(transcript: str, date_str: str, log) -> str:
-    """Generate a 2-3 sentence summary from transcript using MiniMax API."""
-    if not MINIMAX_API_KEY:
-        log("Warning: MINIMAX_API_KEY not set, using template summary")
-        return f"In dieser Episode besprechen wir die wichtigsten Energie-Nachrichten vom {date_str}."
-    
-    log("Generating summary with MiniMax API...")
-    
-    prompt = f"""Erstelle eine Zusammenfassung auf Deutsch für einen Energie-Podcast.
-
-Transkript-Auszug:
-{transcript[:1500]}...
-
-Die Zusammenfassung sollte:
-- Genau 2-3 Sätze lang sein
-- Auf Deutsch sein
-- Die Hauptthemen der Episode zusammenfassen
-- Als Fließtext ohne Aufzählungszeichen
-
-Gib nur die Zusammenfassung zurück."""
-
-    try:
-        client = Anthropic(api_key=MINIMAX_API_KEY)
-        response = client.messages.create(
-            model="minimax/MiniMax-M2.7",
-            max_tokens=200,
-            messages=[
-                {"role": "user", "content": prompt}
-            ]
-        )
-        summary = response.content[0].text.strip()
-        log(f"Summary generated: {summary[:100]}...")
-        return summary
-    except Exception as e:
-        log(f"MiniMax API error: {e}, using template")
-        return f"In dieser Episode besprechen wir die wichtigsten Energie-Nachrichten vom {date_str}."
-
-
 def generate_audio(transcript: str, date_str: str, log) -> bool:
-    """Generate MP3 audio using Kokoro TTS."""
-    log("Generating audio with Kokoro TTS...")
+    """Generate MP3 audio using Piper TTS with German voice."""
+    log("Generating audio with Piper TTS (German voice)...")
     
     audio_file = AUDIO_DIR / f"{date_str}.mp3"
     
-    # Save transcript to temp file
-    text_file = LOGS_DIR / f"transcript-{date_str}.txt"
-    with open(text_file, "w") as f:
-        f.write(transcript)
+    # Ensure ffmpeg is in PATH
+    env = os.environ.copy()
+    local_bin = Path.home() / ".local" / "bin"
+    if local_bin.exists():
+        env["PATH"] = f"{local_bin}:{env.get('PATH', '')}"
     
     try:
-        # Try using kokoro CLI if available
+        from piper import PiperVoice
+        import wave
+        
+        voice_model = REPO_PATH / "scripts" / "voices" / "de_DE-thorsten-high.onnx"
+        voice_config = str(voice_model) + ".json"
+        
+        log(f"Loading voice model: {voice_model}")
+        voice = PiperVoice.load(str(voice_model), config_path=voice_config)
+        
+        # Generate WAV
+        wav_path = LOGS_DIR / f"audio-{date_str}.wav"
+        sample_rate = voice.config.sample_rate
+        
+        log(f"Synthesizing audio (sample_rate={sample_rate})...")
+        wav_file = wave.open(str(wav_path), 'wb')
+        wav_file.setnchannels(1)
+        wav_file.setsampwidth(2)
+        wav_file.setframerate(sample_rate)
+        
+        # Use first 1000 chars to avoid very long synthesis
+        text_to_synthesize = transcript[:1000]
+        voice.synthesize(text_to_synthesize, wav_file)
+        wav_file.close()
+        
+        log(f"WAV generated: {wav_path}")
+        
+        # Convert WAV to MP3 with ffmpeg
+        ffmpeg_path = local_bin / "ffmpeg" if local_bin.exists() else "ffmpeg"
         result = subprocess.run(
-            [KOKORO_PATH, "--voice", "af_heart", "--output", str(audio_file), str(text_file)],
+            [str(ffmpeg_path), '-i', str(wav_path),
+             '-codec:a', 'libmp3lame',
+             '-qscale:a', '2',
+             str(audio_file)],
             capture_output=True,
             text=True,
-            timeout=300
+            env=env
         )
-        if result.returncode == 0 and audio_file.exists():
-            log(f"Audio generated: {audio_file}")
-            return True
-        else:
-            log(f"Kokoro error: {result.stderr}")
-            # Fall back to creating placeholder
+        
+        if result.returncode != 0:
+            log(f"ffmpeg error: {result.stderr}")
             create_audio_placeholder(date_str, log)
             return True
-    except FileNotFoundError:
-        log("Kokoro not found, creating placeholder audio")
+        
+        # Remove temporary WAV file
+        wav_path.unlink()
+        
+        log(f"Audio generated: {audio_file}")
+        return True
+            
+    except ImportError as e:
+        log(f"Piper import error: {e}")
         create_audio_placeholder(date_str, log)
         return True
     except Exception as e:
@@ -379,15 +366,14 @@ def main():
     log("Episode approved, starting generation...")
 
     try:
-        # Step 1: Generate transcript
-        news_items = cache.get("news_items", [])
+        # Step 1: Read transcript from cache file (written by OpenClaw bot)
         episode = cache.get("episode", {})
         
-        transcript = generate_transcript(news_items, date_str, log)
+        transcript = generate_transcript(date_str, log)
         episode["transcript"] = transcript
 
-        # Step 2: Generate summary
-        summary = generate_summary(transcript, date_str, log)
+        # Step 2: Read summary from cache file
+        summary = generate_summary(date_str, log)
         episode["summary"] = summary
 
         # Step 3: Generate audio

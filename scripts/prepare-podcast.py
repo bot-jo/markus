@@ -300,9 +300,32 @@ def save_episodes(episodes: list[dict]) -> None:
         json.dump(episodes, f, ensure_ascii=False, indent=2)
 
 
-def send_approval_request(episode_preview: dict, news_count: int, log) -> None:
+def send_approval_request(episode_preview: dict, news_items: list[dict], news_count: int, log) -> None:
     """Send approval request and save cache."""
     date_str = episode_preview["slug"]
+    
+    # Format articles for the prompt
+    articles_text = "\n".join([
+        f"- {item['title']} ({item.get('source', 'Unknown')}, {item.get('country', 'INT')})"
+        for item in news_items[:15]
+    ])
+    
+    # Create prompt file for OpenClaw bot
+    prompt_file = CACHE_DIR / f"podcast-{date_str}-prompt.txt"
+    prompt_content = f"""Schreibe einen deutschen Podcast-Text für "Energie Weekly" basierend auf diesen Nachrichten vom {date_str}:
+
+{articles_text}
+
+Struktur:
+1. Begrüßung und Übersicht (ca. 100 Wörter)
+2. Hauptthemen (3-4 Themen, je ca. 300-400 Wörter)
+3. Ausblick und Verabschiedung (ca. 100 Wörter)
+
+Gesamtlänge: ca. 1400-1600 Wörter.
+Beginne mit: "Willkommen bei Energie Weekly..."
+"""
+    with open(prompt_file, "w") as f:
+        f.write(prompt_content)
     
     # Build preview text
     preview_text = f"""
@@ -328,7 +351,7 @@ Zum Ablehnen:
     cache_data = {
         "status": "pending",
         "episode": episode_preview,
-        "news_items": [],
+        "news_items": news_items,
         "created_at": datetime.now().isoformat(),
         "approved_at": None,
         "completed_at": None,
@@ -337,6 +360,7 @@ Zum Ablehnen:
     save_cache(cache_data, date_str)
 
     log(f"Approval request saved for {date_str}")
+    log(f"Prompt file saved: {prompt_file}")
     print(preview_text)
     print(f"\nWaiting for user approval...")
 
@@ -386,7 +410,7 @@ def main():
         sys.exit(0)
 
     # Send approval request
-    send_approval_request(episode_preview, len(news_items), log)
+    send_approval_request(episode_preview, news_items, len(news_items), log)
     log("Approval request sent. Waiting for user response.")
 
 
