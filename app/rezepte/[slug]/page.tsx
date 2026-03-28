@@ -7,6 +7,16 @@ import Link from 'next/link';
 
 const recipesDirectory = path.join(process.cwd(), 'content/rezepte');
 
+interface RecipeFrontmatter {
+  title: string;
+  description?: string;
+  servings?: number;
+  prepTime?: string;
+  tags?: string[];
+  source?: string;
+  date?: string;
+}
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
@@ -23,14 +33,15 @@ export async function generateStaticParams() {
 
 async function getRecipeContent(slug: string): Promise<{
   content: string;
-  data: Record<string, unknown>;
+  data: RecipeFrontmatter;
 } | null> {
   const filePath = path.join(recipesDirectory, `${slug}.md`);
   if (!fs.existsSync(filePath)) {
     return null;
   }
   const fileContents = fs.readFileSync(filePath, 'utf8');
-  const { data, content } = matter(fileContents);
+  const { data: rawData, content } = matter(fileContents);
+  const data = rawData as RecipeFrontmatter;
 
   const processedContent = await remark().use(remarkHtml).process(content);
   const contentHtml = processedContent.toString();
@@ -69,24 +80,24 @@ export default async function RecipePage({ params }: PageProps) {
       </Link>
 
       {/* Title */}
-      <h1 className="text-3xl font-bold text-white mb-6">{data.title as string}</h1>
+      <h1 className="text-3xl font-bold text-white mb-6">{data.title}</h1>
 
       {/* Metadata row */}
       <div className="flex flex-wrap items-center gap-3 mb-8 pb-6 border-b border-gray-800">
         {data.prepTime && (
           <span className="inline-flex items-center gap-1.5 bg-cyan-900/40 text-cyan-300 text-sm px-3 py-1.5 rounded-full">
             <span>⏱️</span>
-            <span>{data.prepTime as string}</span>
+            <span>{data.prepTime}</span>
           </span>
         )}
         {data.servings && (
           <span className="inline-flex items-center gap-1.5 bg-emerald-900/40 text-emerald-300 text-sm px-3 py-1.5 rounded-full">
             <span>🍽️</span>
-            <span>{data.servings as number} Portionen</span>
+            <span>{data.servings} Portionen</span>
           </span>
         )}
         <div className="flex flex-wrap gap-2">
-          {(data.tags as string[] | undefined)?.map((tag: string) => (
+          {data.tags?.map((tag: string) => (
             <span
               key={tag}
               className="bg-purple-900/40 text-purple-300 text-xs px-2 py-1 rounded"
@@ -100,7 +111,7 @@ export default async function RecipePage({ params }: PageProps) {
       {/* Description from frontmatter */}
       {data.description && (
         <p className="text-gray-300 text-lg leading-relaxed mb-8">
-          {data.description as string}
+          {data.description}
         </p>
       )}
 
@@ -126,12 +137,12 @@ export default async function RecipePage({ params }: PageProps) {
       {data.source && (
         <div className="mt-8 pt-6 border-t border-gray-800">
           <a
-            href={data.source as string}
+            href={data.source}
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm text-gray-500 hover:text-cyan-400 transition-colors"
           >
-            Quelle: {(data.source as string).replace(/^https?:\/\//, '').split('/')[0]}
+            Quelle: {data.source.replace(/^https?:\/\//, '').split('/')[0]}
           </a>
         </div>
       )}
