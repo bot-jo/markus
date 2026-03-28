@@ -39,6 +39,17 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
+      - name: Build
+        run: npm run build
+
+      - name: Start test server
+        run: node test-server.js &
+        env:
+          PORT: 3000
+
+      - name: Wait for server
+        run: sleep 3 && curl -sf http://localhost:3000/markus/ || exit 1
+
       - name: Run E2E tests
         run: npm run test:e2e
 
