@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { Suspense } from 'react';
 import RecipeList from '@/components/RecipeList';
 
 const recipesDirectory = path.join(process.cwd(), 'content/rezepte');
@@ -61,7 +62,9 @@ export default function RezeptePage() {
   return (
     <div>
       <h1 className="text-3xl font-bold mb-8">Rezepte</h1>
-      <RecipeList recipes={recipes} allTags={allTags} />
+      <Suspense fallback={<div className="text-gray-400">Laden...</div>}>
+        <RecipeList recipes={recipes} allTags={allTags} />
+      </Suspense>
     </div>
   );
 }
