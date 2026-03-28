@@ -21,7 +21,10 @@ export async function generateStaticParams() {
   }));
 }
 
-async function getRecipeContent(slug: string): Promise<{ content: string; data: Record<string, unknown> } | null> {
+async function getRecipeContent(slug: string): Promise<{
+  content: string;
+  data: Record<string, unknown>;
+} | null> {
   const filePath = path.join(recipesDirectory, `${slug}.md`);
   if (!fs.existsSync(filePath)) {
     return null;
@@ -41,9 +44,12 @@ export default async function RecipePage({ params }: PageProps) {
 
   if (!recipe) {
     return (
-      <div className="text-center py-16">
-        <p className="text-gray-400">Rezept nicht gefunden.</p>
-        <Link href="/rezepte" className="text-cyan-400 hover:underline mt-4 inline-block">
+      <div className="max-w-2xl mx-auto px-6 py-16 text-center">
+        <p className="text-gray-400 text-lg">Rezept nicht gefunden.</p>
+        <Link
+          href="/rezepte"
+          className="text-cyan-400 hover:underline mt-4 inline-block"
+        >
           ← Zurück zu Rezepten
         </Link>
       </div>
@@ -53,40 +59,82 @@ export default async function RecipePage({ params }: PageProps) {
   const { content, data } = recipe;
 
   return (
-    <div>
+    <div className="max-w-2xl mx-auto px-6 py-8">
+      {/* Back link */}
       <Link
         href="/rezepte"
-        className="text-cyan-400 hover:underline text-sm mb-6 inline-block"
+        className="text-gray-500 hover:text-cyan-400 text-sm mb-6 inline-block transition-colors"
       >
-        ← Zurück zu Rezepten
+        ← Alle Rezepte
       </Link>
 
-      <article className="bg-gray-900 border border-gray-800 rounded-xl p-8">
-        <header className="mb-8 pb-8 border-b border-gray-800">
-          <h1 className="text-3xl font-bold text-cyan-400 mb-4">{data.title as string}</h1>
-          <p className="text-gray-400 mb-4">{data.description as string}</p>
-          <div className="flex flex-wrap gap-4 text-sm text-gray-500">
-            <span>📅 {data.date as string}</span>
-            <span>⏱ {data.prepTime as string}</span>
-            <span>🍽 {data.servings as number} Portionen</span>
-          </div>
-          <div className="flex flex-wrap gap-2 mt-4">
-            {(data.tags as string[]).map((tag: string) => (
-              <span
-                key={tag}
-                className="text-xs bg-gray-800 text-gray-300 px-2 py-1 rounded"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </header>
+      {/* Title */}
+      <h1 className="text-3xl font-bold text-white mb-6">{data.title as string}</h1>
 
-        <div
-          className="prose prose-invert prose-cyan max-w-none"
-          dangerouslySetInnerHTML={{ __html: content }}
-        />
-      </article>
+      {/* Metadata row */}
+      <div className="flex flex-wrap items-center gap-3 mb-8 pb-6 border-b border-gray-800">
+        {data.prepTime && (
+          <span className="inline-flex items-center gap-1.5 bg-cyan-900/40 text-cyan-300 text-sm px-3 py-1.5 rounded-full">
+            <span>⏱️</span>
+            <span>{data.prepTime as string}</span>
+          </span>
+        )}
+        {data.servings && (
+          <span className="inline-flex items-center gap-1.5 bg-emerald-900/40 text-emerald-300 text-sm px-3 py-1.5 rounded-full">
+            <span>🍽️</span>
+            <span>{data.servings as number} Portionen</span>
+          </span>
+        )}
+        <div className="flex flex-wrap gap-2">
+          {(data.tags as string[] | undefined)?.map((tag: string) => (
+            <span
+              key={tag}
+              className="bg-purple-900/40 text-purple-300 text-xs px-2 py-1 rounded"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Description from frontmatter */}
+      {data.description && (
+        <p className="text-gray-300 text-lg leading-relaxed mb-8">
+          {data.description as string}
+        </p>
+      )}
+
+      {/* Rendered markdown content */}
+      <div
+        className="prose prose-invert prose-cyan max-w-none
+          prose-headings:text-white prose-headings:font-semibold
+          prose-h2:text-xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:pb-2 prose-h2:border-b prose-h2:border-gray-800
+          prose-p:text-gray-300 prose-p:leading-relaxed
+          prose-ul:my-4 prose-ul:space-y-2
+          prose-li:text-gray-300 prose-li:marker:text-cyan-400
+          prose-ol:my-4 prose-ol:space-y-3
+          prose-li:marker:text-cyan-400 prose-li:marker:font-bold
+          prose-strong:text-white prose-strong:font-semibold
+          prose-a:text-cyan-400 prose-a:underline
+          prose-blockquote:border-l-cyan-400 prose-blockquote:text-gray-400
+          prose-code:text-cyan-300 prose-code:bg-gray-800 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
+          prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-800"
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
+
+      {/* Source link */}
+      {data.source && (
+        <div className="mt-8 pt-6 border-t border-gray-800">
+          <a
+            href={data.source as string}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-gray-500 hover:text-cyan-400 transition-colors"
+          >
+            Quelle: {(data.source as string).replace(/^https?:\/\//, '').split('/')[0]}
+          </a>
+        </div>
+      )}
     </div>
   );
 }

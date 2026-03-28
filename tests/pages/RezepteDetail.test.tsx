@@ -79,7 +79,7 @@ describe('RezepteDetail', () => {
 
   it('renders back link to /rezepte', async () => {
     render(await RecipeDetailPage({ params: mockParams }));
-    const backLink = screen.getByRole('link', { name: /zurück zu rezepten/i });
+    const backLink = screen.getByRole('link', { name: /alle rezepte/i });
     expect(backLink).toHaveAttribute('href', '/rezepte');
   });
 });

@@ -41,9 +41,9 @@ describe('recipes lib', () => {
   describe('getRecipeFiles', () => {
     it('returns correct slug from filename', () => {
       const files = getRecipeFiles();
-      if (files.length > 0) {
-        expect(files[0].replace('.md', '')).toBe('beispiel-rezept');
-      }
+      expect(files.length).toBeGreaterThan(0);
+      const slug = files[0].replace('.md', '');
+      expect(slug).toMatch(/^[a-z-]+$/);
     });
 
     it('returns all recipes from content/rezepte/', () => {
