@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Home', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/markus/');
   });
 
   test('hero section with "Jo" is visible', async ({ page }) => {
