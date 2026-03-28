@@ -186,15 +186,16 @@ def generate_audio(transcript: str, date_str: str, log) -> bool:
         sample_rate = voice.config.sample_rate
         
         log(f"Synthesizing audio (sample_rate={sample_rate})...")
-        wav_file = wave.open(str(wav_path), 'wb')
-        wav_file.setnchannels(1)
-        wav_file.setsampwidth(2)
-        wav_file.setframerate(sample_rate)
         
         # Use first 1000 chars to avoid very long synthesis
         text_to_synthesize = transcript[:1000]
-        voice.synthesize(text_to_synthesize, wav_file)
-        wav_file.close()
+        
+        # Use synthesize_wav which properly writes audio data
+        with wave.open(str(wav_path), 'wb') as wav_file:
+            wav_file.setnchannels(1)
+            wav_file.setsampwidth(2)
+            wav_file.setframerate(sample_rate)
+            voice.synthesize_wav(text_to_synthesize, wav_file)
         
         log(f"WAV generated: {wav_path}")
         
