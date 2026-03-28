@@ -43,7 +43,7 @@ export default async function RecipePage({ params }: PageProps) {
     return (
       <div className="text-center py-16">
         <p className="text-gray-400">Rezept nicht gefunden.</p>
-        <Link href="/markus/rezepte" className="text-cyan-400 hover:underline mt-4 inline-block">
+        <Link href="/rezepte" className="text-cyan-400 hover:underline mt-4 inline-block">
           ← Zurück zu Rezepten
         </Link>
       </div>
@@ -55,7 +55,7 @@ export default async function RecipePage({ params }: PageProps) {
   return (
     <div>
       <Link
-        href="/markus/rezepte"
+        href="/rezepte"
         className="text-cyan-400 hover:underline text-sm mb-6 inline-block"
       >
         ← Zurück zu Rezepten

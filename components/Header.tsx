@@ -5,23 +5,20 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 const navLinks = [
-  { href: '/markus', label: 'Home' },
-  { href: '/markus/rezepte', label: 'Rezepte' },
-  { href: '/markus/impostor-game', label: 'Impostor Game' },
+  { href: '/', label: 'Home' },
+  { href: '/rezepte', label: 'Rezepte' },
+  { href: '/impostor-game', label: 'Impostor Game' },
 ];
-
-const basePath = '/markus';
 
 export default function Header() {
   const pathname = usePathname() || '/';
-  const normalizedPathname = pathname.startsWith(basePath) ? pathname : `${basePath}${pathname}`;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <header className="border-b border-gray-800 bg-gray-900">
       <nav className="max-w-5xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <Link href={basePath} className="text-xl font-bold text-cyan-400 hover:text-cyan-300">
+          <Link href="/" className="text-xl font-bold text-cyan-400 hover:text-cyan-300">
             Markus
           </Link>
 
@@ -32,7 +29,7 @@ export default function Header() {
                 key={link.href}
                 href={link.href}
                 className={`text-sm font-medium transition-colors ${
-                  normalizedPathname === link.href
+                  pathname === link.href
                     ? 'text-cyan-400 underline underline-offset-4'
                     : 'text-gray-300 hover:text-white'
                 }`}
@@ -66,7 +63,7 @@ export default function Header() {
                 key={link.href}
                 href={link.href}
                 className={`text-sm font-medium transition-colors ${
-                  normalizedPathname === link.href
+                  pathname === link.href
                     ? 'text-cyan-400 underline underline-offset-4'
                     : 'text-gray-300 hover:text-white'
                 }`}

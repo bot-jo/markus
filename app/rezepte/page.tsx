@@ -61,7 +61,7 @@ export default function RezeptePage() {
         {recipes.map((recipe) => (
           <Link
             key={recipe.slug}
-            href={`/markus/rezepte/${recipe.slug}`}
+            href={`/rezepte/${recipe.slug}`}
             className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-cyan-500/50 transition-colors block"
           >
             <h2 className="text-xl font-semibold text-cyan-400 mb-2">{recipe.title}</h2>
