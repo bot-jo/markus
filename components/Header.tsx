@@ -19,7 +19,7 @@ export default function Header() {
       <nav className="max-w-5xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <Link href="/" className="text-xl font-bold text-cyan-400 hover:text-cyan-300">
-            Markus
+            Jo
           </Link>
 
           {/* Desktop Nav */}

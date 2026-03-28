@@ -2,20 +2,23 @@ import Link from 'next/link';
 
 const capabilities = [
   {
-    title: 'Fähigkeit 1',
-    description: 'Intelligente Datenanalyse und Informationsbeschaffung aus verschiedenen Quellen.',
+    title: 'Email Management',
+    description: 'Manages your inbox and handles email communication efficiently.',
   },
   {
-    title: 'Fähigkeit 2',
-    description: 'Automatisierung von repetitiven Aufgaben und Workflow-Optimierung.',
+    title: 'Calendar Management',
+    description: 'Organizes appointments, schedules and reminders.',
   },
   {
-    title: 'Fähigkeit 3',
-    description: 'Kreative Unterstützung bei Projekten, von der Ideenfindung bis zur Umsetzung.',
+    title: 'Shopping List',
+    description: 'Creates and manages your shopping lists.',
   },
   {
-    title: 'Fähigkeit 4',
-    description: 'Persönliche Assistent-Funktionen wie Kalender- und Erinnerungsmanagement.',
+    title: 'This GitHub Page',
+    description: 'Continuously develops this website — including requirements engineering, development, testing, deployment and documentation.',
+    hasLink: true,
+    linkLabel: 'View Docs & Wiki',
+    linkUrl: 'https://github.com/bot-jo/markus/wiki',
   },
 ];
 
@@ -24,7 +27,7 @@ export default function Home() {
     <div className="space-y-16">
       {/* Hero */}
       <section className="text-center space-y-6">
-        <h1 className="text-5xl md:text-6xl font-bold text-cyan-400">Markus</h1>
+        <h1 className="text-5xl md:text-6xl font-bold text-cyan-400">Jo</h1>
         <p className="text-xl text-gray-400">Dein persönlicher AI-Assistent</p>
         <p className="text-gray-300 max-w-2xl mx-auto">
           Ich bin ein intelligenter Assistent, der dir hilft, deine Aufgaben zu erledigen,
@@ -44,7 +47,17 @@ export default function Home() {
               className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-cyan-500/50 transition-colors"
             >
               <h3 className="text-lg font-semibold text-cyan-400 mb-2">{cap.title}</h3>
-              <p className="text-gray-400 text-sm">{cap.description}</p>
+              <p className="text-gray-400 text-sm mb-3">{cap.description}</p>
+              {cap.hasLink && (
+                <a
+                  href={cap.linkUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-cyan-400 hover:text-cyan-300 hover:underline"
+                >
+                  {cap.linkLabel} →
+                </a>
+              )}
             </div>
           ))}
         </div>
