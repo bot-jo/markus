@@ -159,11 +159,26 @@ In dieser Episode besprechen wir die wichtigsten Nachrichten aus der Energiewirt
     return transcript
 
 
+def split_into_sentences(text: str) -> list[str]:
+    """Split text into sentences on sentence-ending punctuation."""
+    import re
+    sentences = re.split(r'(?<=[.!?])\s+', text.strip())
+    sentences = [s.strip() for s in sentences if s.strip()]
+    return sentences
+
+
 def generate_audio(transcript: str, date_str: str, log) -> bool:
-    """Generate MP3 audio using Piper TTS with German voice."""
-    log("Generating audio with Piper TTS (German voice)...")
+    """Generate MP3 audio using Piper TTS with German voice, sentence by sentence."""
+    import re
+    import wave
+    import struct
+    
+    log("Generating audio with Piper TTS (sentence by sentence)...")
     
     audio_file = AUDIO_DIR / f"{date_str}.mp3"
+    
+    # Setup log file for audio generation
+    audio_log_path = LOGS_DIR / f"podcast-{date_str}-audio.log"
     
     # Ensure ffmpeg is in PATH
     env = os.environ.copy()
@@ -173,36 +188,80 @@ def generate_audio(transcript: str, date_str: str, log) -> bool:
     
     try:
         from piper import PiperVoice
-        import wave
+        from pydub import AudioSegment
         
         voice_model = REPO_PATH / "scripts" / "voices" / "de_DE-thorsten-high.onnx"
         voice_config = str(voice_model) + ".json"
         
         log(f"Loading voice model: {voice_model}")
         voice = PiperVoice.load(str(voice_model), config_path=voice_config)
-        
-        # Generate WAV
-        wav_path = LOGS_DIR / f"audio-{date_str}.wav"
         sample_rate = voice.config.sample_rate
         
-        log(f"Synthesizing audio (sample_rate={sample_rate})...")
+        sentences = split_into_sentences(transcript)
+        total = len(sentences)
+        log(f"Processing {total} sentences...")
         
-        # Use first 1000 chars to avoid very long synthesis
-        text_to_synthesize = transcript[:1000]
+        # Write to both console and log file
+        def log_progress(msg):
+            print(msg)
+            with open(audio_log_path, "a") as f:
+                f.write(msg + "\n")
         
-        # Use synthesize_wav which properly writes audio data
-        with wave.open(str(wav_path), 'wb') as wav_file:
-            wav_file.setnchannels(1)
-            wav_file.setsampwidth(2)
-            wav_file.setframerate(sample_rate)
-            voice.synthesize_wav(text_to_synthesize, wav_file)
+        segment_dir = LOGS_DIR / f"segments_{date_str}"
+        segment_dir.mkdir(exist_ok=True)
         
-        log(f"WAV generated: {wav_path}")
+        segment_paths = []
         
-        # Convert WAV to MP3 with ffmpeg
+        for i, sentence in enumerate(sentences):
+            if not sentence:
+                continue
+            
+            segment_wav = segment_dir / f"segment_{i:04d}.wav"
+            
+            try:
+                with wave.open(str(segment_wav), 'wb') as wav_file:
+                    wav_file.setnchannels(1)
+                    wav_file.setsampwidth(2)
+                    wav_file.setframerate(sample_rate)
+                    voice.synthesize_wav(sentence, wav_file)
+                
+                segment_paths.append(str(segment_wav))
+                log_progress(f"  [{i+1}/{total}] {sentence[:60]}...")
+                
+            except Exception as e:
+                log_progress(f"  [{i+1}/{total}] ERROR: {e} — skipping")
+                continue
+        
+        if not segment_paths:
+            log("No audio segments generated")
+            create_audio_placeholder(date_str, log)
+            return True
+        
+        log(f"Merging {len(segment_paths)} segments...")
+        
+        # Merge all segments into single WAV using wave module
+        combined_wav = LOGS_DIR / f"combined_{date_str}.wav"
+        silence_samples = int(sample_rate * 0.3)  # 300ms silence
+        
+        with wave.open(str(combined_wav), 'wb') as out_wav:
+            out_wav.setnchannels(1)
+            out_wav.setsampwidth(2)
+            out_wav.setframerate(sample_rate)
+            
+            for i, path in enumerate(segment_paths):
+                # Read segment
+                with wave.open(path, 'rb') as seg:
+                    out_wav.writeframes(seg.readframes(seg.getnframes()))
+                
+                # Add silence between sentences (except after last)
+                if i < len(segment_paths) - 1:
+                    out_wav.writeframes(b'\x00' * silence_samples * 2)  # 16-bit samples
+        
+        # Convert WAV to MP3 with ffmpeg directly
+        log(f"Converting to MP3...")
         ffmpeg_path = local_bin / "ffmpeg" if local_bin.exists() else "ffmpeg"
         result = subprocess.run(
-            [str(ffmpeg_path), '-i', str(wav_path),
+            [str(ffmpeg_path), '-y', '-i', str(combined_wav),
              '-codec:a', 'libmp3lame',
              '-qscale:a', '2',
              str(audio_file)],
@@ -213,13 +272,26 @@ def generate_audio(transcript: str, date_str: str, log) -> bool:
         
         if result.returncode != 0:
             log(f"ffmpeg error: {result.stderr}")
+            combined_wav.unlink()
             create_audio_placeholder(date_str, log)
             return True
         
-        # Remove temporary WAV file
-        wav_path.unlink()
+        # Get duration using wave module
+        with wave.open(str(combined_wav), 'rb') as w:
+            frames = w.getnframes()
+            duration_secs = frames / w.getframerate()
+        combined_wav.unlink()
         
-        log(f"Audio generated: {audio_file}")
+        minutes = int(duration_secs) // 60
+        remaining = int(duration_secs) % 60
+        duration_str = f"{minutes}:{remaining:02d}"
+        
+        # Cleanup segment files
+        for path in segment_paths:
+            Path(path).unlink()
+        segment_dir.rmdir()
+        
+        log(f"Audio generated: {audio_file} ({duration_str})")
         return True
             
     except ImportError as e:
