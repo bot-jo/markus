@@ -4,7 +4,7 @@ description: "Eine aromatische marokkanische Gemüse-Tajine mit Fenchel, Paprika
 date: "2026-03-29"
 servings: 4
 prepTime: "90 Minuten"
-tags: ["Vegetarisch", "Marokkanisch", "Hauptgericht", "Ofengericht"]
+tags: ['Hauptgericht', 'Vegetarisch', 'Vegan']
 ---
 
 ## Beschreibung

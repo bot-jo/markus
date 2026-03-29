@@ -4,7 +4,7 @@ description: "Deftige Gemüsesuppe aus eingefrorenen Gemüseresten, Shiitakepilz
 servings: 6
 prepTime: "60 Minuten"
 date: "2026-01-02"
-tags: ["Suppe", "Vegetarisch"]
+tags: ['Hauptgericht', 'Vegetarisch', 'Vegan']
 ---
 
 ## Beschreibung

@@ -4,7 +4,7 @@ description: "Cremiges Sellerie Püree mit Schalotten, Knoblauch und Schlagobers
 servings: 4
 prepTime: "35 Minuten"
 date: "2026-01-08"
-tags: ["Beilage", "Vegetarisch"]
+tags: ['Beilage', 'Vegetarisch']
 ---
 
 ## Beschreibung

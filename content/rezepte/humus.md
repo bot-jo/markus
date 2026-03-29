@@ -4,7 +4,7 @@ description: "Cremiger Hummus mit Kichererbsen, Tahini, Knoblauch und Zitrone. B
 servings: 6
 prepTime: "10 Minuten"
 date: "2026-01-03"
-tags: ["Dip", "Vegetarisch", "Vegan"]
+tags: ['Dip', 'Vegetarisch', 'Vegan']
 ---
 
 ## Beschreibung

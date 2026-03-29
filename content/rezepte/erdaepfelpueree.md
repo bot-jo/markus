@@ -4,7 +4,7 @@ description: "Cremiges österreichisches Erdäpfelpüree aus mehligen Kartoffeln
 date: "2026-03-29"
 servings: 4
 prepTime: "35 Minuten"
-tags: ["Österreichisch", "Vegetarisch", "Beilage", "Hausmannskost"]
+tags: ['Beilage', 'Vegetarisch']
 ---
 
 ## Beschreibung

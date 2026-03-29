@@ -4,7 +4,7 @@ description: "Knusprige Bohnenbällchen aus Kidneybohnen, Haferflocken und Sonne
 servings: 4
 prepTime: "45 Minuten"
 date: "2025-12-31"
-tags: ["Hauptgericht", "Vegetarisch"]
+tags: ['Hauptgericht', 'Vegetarisch', 'Vegan']
 ---
 
 ## Beschreibung

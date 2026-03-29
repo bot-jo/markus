@@ -4,7 +4,7 @@ description: "Ein österreichischer Nudelklassiker — Fleckerl mit Schinken, Zw
 date: "2026-03-29"
 servings: 4
 prepTime: "45 Minuten"
-tags: ["Österreichisch", "Nudeln", "Hauptgericht", "Auflauf", "Hausmannskost"]
+tags: ['Hauptgericht']
 ---
 
 ## Beschreibung

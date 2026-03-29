@@ -4,7 +4,7 @@ description: "Ein cremiger, süß-würziger Datteldip mit Frischkäse, griechisc
 date: "2026-03-29"
 servings: 4
 prepTime: "15 Minuten"
-tags: ["Vegetarisch", "Dip", "Vorspeise", "Snack"]
+tags: ['Dip', 'Vorspeise', 'Vegetarisch']
 ---
 
 ## Beschreibung

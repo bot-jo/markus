@@ -4,7 +4,7 @@ description: "Klassischer Flammkuchen mit Speck, Lauch und Zwiebeln auf knusprig
 servings: 4
 prepTime: "40 Minuten"
 date: "2026-01-01"
-tags: ["Hauptgericht"]
+tags: ['Hauptgericht', 'Vegetarisch']
 ---
 
 ## Beschreibung

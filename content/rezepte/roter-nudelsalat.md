@@ -4,7 +4,7 @@ description: "Farbenfroher Nudelsalat mit Fusili, getrockneten Tomaten, Kirschto
 servings: 4
 prepTime: "25 Minuten"
 date: "2026-01-06"
-tags: ["Hauptgericht", "Vegetarisch"]
+tags: ['Hauptgericht', 'Vegetarisch', 'Vegan']
 ---
 
 ## Beschreibung
