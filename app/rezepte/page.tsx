@@ -20,7 +20,14 @@ function getRecipeFiles(): string[] {
   if (!fs.existsSync(recipesDirectory)) {
     return [];
   }
-  return fs.readdirSync(recipesDirectory).filter((file) => file.endsWith('.md'));
+  return fs.readdirSync(recipesDirectory)
+    .filter((file) => file.endsWith('.md'))
+    .map((file) => ({
+      file,
+      mtime: fs.statSync(path.join(recipesDirectory, file)).mtime.getTime(),
+    }))
+    .sort((a, b) => b.mtime - a.mtime)
+    .map((f) => f.file);
 }
 
 function getRecipeMeta(slug: string): RecipeMeta | null {
