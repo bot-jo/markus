@@ -1,33 +1,45 @@
-// Linked to: US-004, US-005, US-006, US-007
+// Linked to: US-029, US-030, US-031, US-032
 import { render, screen } from '@testing-library/react';
 import Home from '@/app/page';
 
-describe('Home', () => {
-  it('renders hero section with "Jo"', () => {
+describe('Home (US-029, US-030, US-031, US-032)', () => {
+  it('renders hero section with "Jo" heading', () => {
     render(<Home />);
     expect(screen.getByText('Jo')).toBeInTheDocument();
-    expect(screen.getByText('Dein persönlicher AI-Assistent')).toBeInTheDocument();
+    expect(screen.getByText('Dein persönlicher KI-Assistent')).toBeInTheDocument();
   });
 
-  it('renders all four capability cards', () => {
+  it('renders "Über Jo" section', () => {
     render(<Home />);
-    expect(screen.getByText('Email Management')).toBeInTheDocument();
-    expect(screen.getByText('Calendar Management')).toBeInTheDocument();
-    expect(screen.getByText('Shopping List')).toBeInTheDocument();
-    expect(screen.getByText('This GitHub Page')).toBeInTheDocument();
+    expect(screen.getByText('Über Jo')).toBeInTheDocument();
   });
 
-  it('renders CTA button with GitHub link', () => {
+  it('renders all 4 capability cards', () => {
     render(<Home />);
-    const ctaButton = screen.getByRole('link', { name: /github repository/i });
-    expect(ctaButton).toBeInTheDocument();
-    expect(ctaButton).toHaveAttribute('href', 'https://github.com/bot-jo/markus');
+    expect(screen.getByText('E-Mail- & Kalendermanagement')).toBeInTheDocument();
+    expect(screen.getByText('Energie Podcast Creator')).toBeInTheDocument();
+    expect(screen.getByText('RE, Entwicklung & Testing')).toBeInTheDocument();
+    expect(screen.getByText('Einkaufsliste')).toBeInTheDocument();
   });
 
-  it('renders "View Docs & Wiki" link on GitHub Page card', () => {
+  it('renders podcast section (with episode or empty state)', () => {
     render(<Home />);
-    const wikiLink = screen.getByRole('link', { name: /view docs & wiki/i });
-    expect(wikiLink).toBeInTheDocument();
-    expect(wikiLink).toHaveAttribute('href', 'https://github.com/bot-jo/markus/wiki');
+    expect(screen.getByText('Neuester Podcast')).toBeInTheDocument();
+    // Either has episode or shows "Erste Episode erscheint bald."
+    const hasEpisode = screen.queryByText('Erste Episode erscheint bald.');
+    expect(hasEpisode || screen.queryByText('Dauer:')).toBeTruthy();
+  });
+
+  it('renders recipes section', () => {
+    render(<Home />);
+    expect(screen.getByText('Neueste Rezepte')).toBeInTheDocument();
+    expect(screen.getByText('Alle Rezepte →')).toBeInTheDocument();
+  });
+
+  it('renders statistics section', () => {
+    render(<Home />);
+    expect(screen.getByText('Jo in Zahlen')).toBeInTheDocument();
+    expect(screen.getByText('Rezepte')).toBeInTheDocument();
+    expect(screen.getByText('Podcast Episoden')).toBeInTheDocument();
   });
 });
