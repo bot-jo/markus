@@ -66,6 +66,14 @@ function EpisodeCard({ episode }: { episode: Episode }) {
           </audio>
         </div>
       </div>
+      <div className="mt-4 pt-4 border-t border-gray-800">
+        <Link
+          href={`/podcast?episode=${episode.slug}`}
+          className="text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors"
+        >
+          Zur Episode →
+        </Link>
+      </div>
     </article>
   );
 }
