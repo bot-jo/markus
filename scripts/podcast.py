@@ -274,13 +274,28 @@ def generate_audio(transcript: str) -> tuple[str, str]:
 
     combined_wav.unlink()
 
-    with wave.open(str(audio_file), 'rb') as w:
-        frames = w.getnframes()
-        duration_secs = frames / w.getframerate()
+    # Get duration using ffmpeg directly
+    env = os.environ.copy()
+    local_bin = Path.home() / '.local' / 'bin'
+    if local_bin.exists():
+        env["PATH"] = f"{local_bin}:{env.get('PATH', '')}"
+    ffmpeg_path = local_bin / 'ffmpeg' if local_bin.exists() else 'ffmpeg'
 
-    minutes = int(duration_secs) // 60
-    seconds = int(duration_secs) % 60
-    duration = f"{minutes}:{seconds:02d}"
+    probe_result = subprocess.run(
+        [str(ffmpeg_path), '-i', str(audio_file)],
+        capture_output=True, text=True, env=env
+    )
+    # Parse duration from ffmpeg output
+    duration = "10:00"  # default
+    for line in probe_result.stderr.split('\n'):
+        if 'Duration:' in line:
+            # Format: Duration: 00:10:23.39, start: ...
+            time_str = line.split('Duration:')[1].split(',')[0].strip()
+            h, m, s = time_str.split(':')
+            minutes = int(h) * 60 + int(m)
+            seconds = int(s.split('.')[0])
+            duration = f"{minutes}:{seconds:02d}"
+            break
 
     for path in segment_paths:
         Path(path).unlink()
