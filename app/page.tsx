@@ -46,8 +46,15 @@ function getLatestRecipes(count: number = 3): RecipeMeta[] {
     });
   }
 
-  // Sort by date descending
-  recipes.sort((a, b) => (a.slug > b.slug ? -1 : 1));
+  // Sort by file modification time descending (newest first)
+  recipes.sort((a, b) => {
+    const aPath = path.join(recipesDirectory, `${a.slug}.md`);
+    const bPath = path.join(recipesDirectory, `${b.slug}.md`);
+    const aMtime = fs.statSync(aPath).mtime.getTime();
+    const bMtime = fs.statSync(bPath).mtime.getTime();
+    return bMtime - aMtime;
+  });
+
   return recipes.slice(0, count);
 }
 
