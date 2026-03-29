@@ -78,25 +78,25 @@ def setup_dirs():
 def scrape_news() -> list[dict]:
     """Scrape news from all configured RSS sources."""
     sources = [
-        ("ORF News", "https://rss.orf.at/news.xml"),
+        # Austria
         ("Der Standard", "https://www.derstandard.at/rss/wirtschaft"),
-        ("Kleine Zeitung", "https://www.kleinezeitung.at/service/rss/wirtschaft.rss"),
-        ("Tagesspiegel", "https://www.tagesspiegel.de/wirtschaft/energie/feed/"),
-        ("Handelsblatt", "https://www.handelsblatt.com/rss/energie"),
-        ("Energie & Management", "https://www.energie-und-management.de/feed/"),
-        ("Energiezukunft", "https://energiezukunft.eu/feed/"),
-        ("Renewables Now", "https://renewablesnow.com/feed/"),
+        ("Kleine Zeitung", "https://www.kleinezeitung.at/rss/wirtschaft"),
+        # Germany
         ("PV Magazine", "https://www.pv-magazine.de/feed/"),
+        ("SolarServer", "https://www.solarserver.de/feed/"),
+        # International
         ("Carbon Brief", "https://www.carbonbrief.org/feed/"),
         ("Energy Monitor", "https://energymonitor.ai/feed/"),
-        ("Reuters", "https://feeds.reuters.com/reuters/businessNews"),
+        ("CleanTechnica", "https://cleantechnica.com/feed/"),
+        ("Phys.org", "https://phys.org/rss-feed/"),
     ]
 
     keywords = [
         "energie", "strom", "gas", "solar", "wind", "wasserstoff",
         "photovoltaik", "erneuerbar", "klimaschutz", "energiewende",
         "speicher", "netz", "co2", "carbon", "renewable", "energy",
-        "hydrogen", "grid", "climate", "power", "electricity"
+        "hydrogen", "grid", "climate", "power", "electricity",
+        "emission", "kohle", "fossil", "temperatur", "kühlung",
     ]
 
     articles = []
