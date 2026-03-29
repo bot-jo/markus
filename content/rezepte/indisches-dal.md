@@ -3,6 +3,7 @@ title: "Indisches Dal"
 description: "Ein cremiges, würziges indisches Linsengericht mit Kokosmilch und aromatischen Gewürzen — einfach zuzubereiten und unglaublich sättigend."
 servings: 4
 prepTime: "40 Minuten"
+date: "2026-03-29"
 tags: ["Vegetarisch", "Vegan", "Hauptgericht"]
 ---
 

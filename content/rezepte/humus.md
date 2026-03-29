@@ -3,6 +3,7 @@ title: "Humus"
 description: "Cremiger Hummus mit Kichererbsen, Tahini, Knoblauch und Zitrone. Blitzschnell im Mixer zubereitet."
 servings: 6
 prepTime: "10 Minuten"
+date: "2026-01-03"
 tags: ["Dip", "Vegetarisch", "Vegan"]
 ---
 

@@ -12,6 +12,7 @@ interface RecipeMeta {
   prepTime: string;
   servings: number;
   tags: string[];
+  date: string;
 }
 
 interface Episode {
@@ -43,17 +44,12 @@ function getLatestRecipes(count: number = 3): RecipeMeta[] {
       prepTime: data.prepTime || '',
       servings: data.servings || 0,
       tags: data.tags || [],
+      date: data.date || '',
     });
   }
 
-  // Sort by file modification time descending (newest first)
-  recipes.sort((a, b) => {
-    const aPath = path.join(recipesDirectory, `${a.slug}.md`);
-    const bPath = path.join(recipesDirectory, `${b.slug}.md`);
-    const aMtime = fs.statSync(aPath).mtime.getTime();
-    const bMtime = fs.statSync(bPath).mtime.getTime();
-    return bMtime - aMtime;
-  });
+  // Sort by frontmatter date descending (newest first)
+  recipes.sort((a, b) => (a.date < b.date ? 1 : -1));
 
   return recipes.slice(0, count);
 }

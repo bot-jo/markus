@@ -20,14 +20,7 @@ function getRecipeFiles(): string[] {
   if (!fs.existsSync(recipesDirectory)) {
     return [];
   }
-  return fs.readdirSync(recipesDirectory)
-    .filter((file) => file.endsWith('.md'))
-    .map((file) => ({
-      file,
-      mtime: fs.statSync(path.join(recipesDirectory, file)).mtime.getTime(),
-    }))
-    .sort((a, b) => b.mtime - a.mtime)
-    .map((f) => f.file);
+  return fs.readdirSync(recipesDirectory).filter((file) => file.endsWith('.md'));
 }
 
 function getRecipeMeta(slug: string): RecipeMeta | null {
@@ -52,7 +45,8 @@ export default function RezeptePage() {
   const files = getRecipeFiles();
   const recipes = files
     .map((file) => getRecipeMeta(file.replace('.md', '')))
-    .filter((r): r is RecipeMeta => r !== null);
+    .filter((r): r is RecipeMeta => r !== null)
+    .sort((a, b) => (a.date < b.date ? 1 : -1));
 
   if (recipes.length === 0) {
     return (

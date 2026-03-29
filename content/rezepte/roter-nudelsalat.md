@@ -3,6 +3,7 @@ title: "Roter Nudelsalat"
 description: "Farbenfroher Nudelsalat mit Fusili, getrockneten Tomaten, Kirschtomaten, Feta und Pinienkernen. Mit Balsamico-Olivenöl-Dressing und frischem Basilikum."
 servings: 4
 prepTime: "25 Minuten"
+date: "2026-01-06"
 tags: ["Hauptgericht", "Vegetarisch"]
 ---
 

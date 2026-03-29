@@ -3,6 +3,7 @@ title: "Gemüsesuppe"
 description: "Deftige Gemüsesuppe aus eingefrorenen Gemüseresten, Shiitakepilzen und wärmenden Gewürzen. Ideal als Basis für Kartoffelgulasch oder Nudelsuppe."
 servings: 6
 prepTime: "60 Minuten"
+date: "2026-01-02"
 tags: ["Suppe", "Vegetarisch"]
 ---
 

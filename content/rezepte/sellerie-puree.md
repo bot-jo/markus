@@ -3,6 +3,7 @@ title: "Sellerie Püree"
 description: "Cremiges Sellerie Püree mit Schalotten, Knoblauch und Schlagobers. Mit frischen Kräutern und Muskatnuss verfeinert."
 servings: 4
 prepTime: "35 Minuten"
+date: "2026-01-08"
 tags: ["Beilage", "Vegetarisch"]
 ---
 

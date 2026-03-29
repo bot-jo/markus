@@ -3,6 +3,7 @@ title: "Rotkraut Steak"
 description: "Saftig gebackenes Rotkraut mit Feta, Kartoffelspalten und honig-saurer Marinade. Ein vegetarisches Hauptgericht mit viel Ofen-Garantie."
 servings: 4
 prepTime: "70 Minuten"
+date: "2026-01-07"
 tags: ["Hauptgericht", "Vegetarisch"]
 ---
 

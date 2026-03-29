@@ -3,6 +3,7 @@ title: "Bohnenbällchen"
 description: "Knusprige Bohnenbällchen aus Kidneybohnen, Haferflocken und Sonnenblumenkernen. Ofengebacken und am besten mit Humus und Süßkartoffelpüree serviert."
 servings: 4
 prepTime: "45 Minuten"
+date: "2025-12-31"
 tags: ["Hauptgericht", "Vegetarisch"]
 ---
 

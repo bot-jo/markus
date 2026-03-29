@@ -3,6 +3,7 @@ title: "Pad Thai"
 description: "Klassisches thailändisches Pad Thai mit Reisnudeln, Tofu, Gemüse und einer perfekt abgeschmeckten Sauce aus Tamarinde, Sojasauce und braunem Zucker."
 servings: 2
 prepTime: "35 Minuten"
+date: "2026-01-05"
 tags: ["Hauptgericht", "Vegetarisch"]
 ---
 

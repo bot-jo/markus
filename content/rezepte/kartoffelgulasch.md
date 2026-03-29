@@ -3,6 +3,7 @@ title: "Kartoffelgulasch"
 description: "Herzhaftes Kartoffelgulasch mit Paprika, Tomaten und deftigen Gewürzen. Dazu Sauerrahm und Petersilie servieren."
 servings: 4
 prepTime: "50 Minuten"
+date: "2026-01-04"
 tags: ["Hauptgericht", "Vegetarisch"]
 ---
 

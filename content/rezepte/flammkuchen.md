@@ -3,6 +3,7 @@ title: "Flammkuchen"
 description: "Klassischer Flammkuchen mit Speck, Lauch und Zwiebeln auf knusprigem Teig. Mit Sauerrahm-Senf-Mischung verfeinert."
 servings: 4
 prepTime: "40 Minuten"
+date: "2026-01-01"
 tags: ["Hauptgericht"]
 ---
 
