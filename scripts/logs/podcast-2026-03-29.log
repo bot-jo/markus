@@ -1,0 +1,90 @@
+[12:32:38] === Energie Weekly Podcast Generator ===
+[12:32:38] Date: 2026-03-29
+[12:32:38] Scraping news from RSS sources...
+[12:32:38]   ORF News: 0 articles
+[12:32:38]   Der Standard: 5 articles
+[12:32:39]   Kleine Zeitung: 0 articles
+[12:32:39]   Tagesspiegel: 0 articles
+[12:32:46]   Handelsblatt: 0 articles
+[12:32:46]   Energie & Management: 0 articles
+[12:32:46]   Energiezukunft: 0 articles
+[12:32:47]   Renewables Now: 0 articles
+[12:32:47]   PV Magazine: 19 articles
+[12:32:47]   Carbon Brief: 10 articles
+[12:32:48]   Energy Monitor: 9 articles
+[12:32:48]   Reuters: 0 articles
+[12:32:48] Total articles collected: 25
+[12:32:48] Prompt saved to /home/markus/.openclaw/workspace/markus/scripts/cache/podcast-2026-03-29-prompt.txt
+[12:32:48] OpenClaw marker created: /home/markus/.openclaw/workspace/markus/scripts/cache/podcast-2026-03-29-generate.marker
+[12:32:48] OpenClaw bot will generate transcript and summary...
+[12:32:48] Waiting for transcript generation (timeout: 15 min)...
+[12:32:48] Transcript ready (11003 chars)
+[12:32:48] Summary ready (215 chars)
+[12:32:48] Loading Piper voice model...
+[12:32:51] Generating audio for 59 sentences...
+[12:40:44] Merging 59 segments...
+[12:40:44] Converting to MP3...
+[12:40:47] ERROR: file does not start with RIFF id
+[12:40:47] Notification saved: /home/markus/.openclaw/workspace/markus/scripts/cache/notify-2026-03-29.txt
+[12:41:24] === Energie Weekly Podcast Generator ===
+[12:41:24] Date: 2026-03-29
+[12:41:24] Scraping news from RSS sources...
+[12:41:24]   ORF News: 0 articles
+[12:41:24]   Der Standard: 5 articles
+[12:41:25]   Kleine Zeitung: 0 articles
+[12:41:25]   Tagesspiegel: 0 articles
+[12:41:26]   Handelsblatt: 0 articles
+[12:41:26]   Energie & Management: 0 articles
+[12:41:26]   Energiezukunft: 0 articles
+[12:41:27]   Renewables Now: 0 articles
+[12:41:27]   PV Magazine: 19 articles
+[12:41:28]   Carbon Brief: 10 articles
+[12:41:28]   Energy Monitor: 9 articles
+[12:41:28]   Reuters: 0 articles
+[12:41:28] Total articles collected: 25
+[12:41:28] Prompt saved to /home/markus/.openclaw/workspace/markus/scripts/cache/podcast-2026-03-29-prompt.txt
+[12:41:28] OpenClaw marker created: /home/markus/.openclaw/workspace/markus/scripts/cache/podcast-2026-03-29-generate.marker
+[12:41:28] OpenClaw bot will generate transcript and summary...
+[12:41:28] Waiting for transcript generation (timeout: 15 min)...
+[12:41:28] Transcript ready (11003 chars)
+[12:41:28] Summary ready (215 chars)
+[12:41:28] Loading Piper voice model...
+[12:41:31] Generating audio for 59 sentences...
+[12:49:01] Merging 59 segments...
+[12:49:01] Converting to MP3...
+[12:49:04] ERROR: Expecting value: line 1 column 1 (char 0)
+[12:49:04] Notification saved: /home/markus/.openclaw/workspace/markus/scripts/cache/notify-2026-03-29.txt
+[12:50:03] === Energie Weekly Podcast Generator ===
+[12:50:03] Date: 2026-03-29
+[12:50:03] Scraping news from RSS sources...
+[12:50:03]   ORF News: 0 articles
+[12:50:03]   Der Standard: 5 articles
+[12:50:04]   Kleine Zeitung: 0 articles
+[12:50:04]   Tagesspiegel: 0 articles
+[12:50:05]   Handelsblatt: 0 articles
+[12:50:06]   Energie & Management: 0 articles
+[12:50:06]   Energiezukunft: 0 articles
+[12:50:07]   Renewables Now: 0 articles
+[12:50:07]   PV Magazine: 19 articles
+[12:50:07]   Carbon Brief: 10 articles
+[12:50:07]   Energy Monitor: 9 articles
+[12:50:08]   Reuters: 0 articles
+[12:50:08] Total articles collected: 25
+[12:50:08] Prompt saved to /home/markus/.openclaw/workspace/markus/scripts/cache/podcast-2026-03-29-prompt.txt
+[12:50:08] OpenClaw marker created: /home/markus/.openclaw/workspace/markus/scripts/cache/podcast-2026-03-29-generate.marker
+[12:50:08] OpenClaw bot will generate transcript and summary...
+[12:50:08] Waiting for transcript generation (timeout: 15 min)...
+[12:50:08] Transcript ready (11003 chars)
+[12:50:08] Summary ready (215 chars)
+[12:50:08] Loading Piper voice model...
+[12:50:10] Generating audio for 59 sentences...
+[12:57:55] Merging 59 segments...
+[12:57:55] Converting to MP3...
+[12:57:57] Audio generated: /home/markus/.openclaw/workspace/markus/public/podcast/audio/2026-03-29.mp3 (10:21)
+[12:57:58] episodes.json updated
+[12:57:58] Git commit and push...
+[12:58:01] Pushed to GitHub
+[12:58:01] Notification saved: /home/markus/.openclaw/workspace/markus/scripts/cache/notify-2026-03-29.txt
+[12:58:01] Podcast generation completed successfully!
+[2026-03-29 13:55:31] === Generate Podcast Episode ===
+[2026-03-29 13:55:31] Date: 2026-03-29
