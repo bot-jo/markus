@@ -1,4 +1,4 @@
-// Linked to: US-023, US-024
+// Linked to: US-023, US-024, US-027
 import { render, screen, waitFor } from '@testing-library/react';
 import { useSearchParams } from 'next/navigation';
 
@@ -12,6 +12,18 @@ const mockEpisodes = [
     summary: "In dieser Episode besprechen wir die wichtigsten Energie-Nachrichten.",
     transcript: "Willkommen zu den Energie News...",
     audioFile: "2026-03-28.mp3",
+    sources: [
+      {
+        title: "Photovoltaik-Zubau in Österreich",
+        url: "https://example.com/pv-oesterreich",
+        source: "PV Austria"
+      },
+      {
+        title: "Batteriespeicher in Deutschland",
+        url: "https://example.com/batteriespeicher",
+        source: "PV Magazine"
+      }
+    ],
   },
   {
     slug: "2026-03-26",
@@ -125,6 +137,63 @@ describe('Podcast Page (US-023, US-024)', () => {
     
     await waitFor(() => {
       expect(screen.getByText('Episode nicht gefunden.')).toBeInTheDocument();
+    });
+  });
+});
+
+describe('Podcast Sources (US-027)', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams());
+  });
+
+  it('episode card shows source count when sources exist', async () => {
+    render(<PodcastPage />);
+    
+    await waitFor(() => {
+      expect(screen.getByText('2 Quellen')).toBeInTheDocument();
+    });
+  });
+
+  it('episode card does not show source count when no sources', async () => {
+    render(<PodcastPage />);
+    
+    await waitFor(() => {
+      expect(screen.queryByText('Quellen')).not.toBeInTheDocument();
+    });
+  });
+
+  it('episode detail shows Quellen section when sources exist', async () => {
+    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('episode=2026-03-28'));
+    
+    render(<PodcastPage />);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Quellen')).toBeInTheDocument();
+    });
+  });
+
+  it('sources are rendered with title and link', async () => {
+    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('episode=2026-03-28'));
+    
+    render(<PodcastPage />);
+    
+    await waitFor(() => {
+      const link = screen.getByText('Photovoltaik-Zubau in Österreich');
+      expect(link).toBeInTheDocument();
+      expect(link.closest('a')).toHaveAttribute('href', 'https://example.com/pv-oesterreich');
+    });
+  });
+
+  it('source entries include source name', async () => {
+    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams('episode=2026-03-28'));
+    
+    render(<PodcastPage />);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Quellen')).toBeInTheDocument();
+      const sources = screen.getByText('Photovoltaik-Zubau in Österreich').closest('ul');
+      expect(sources?.textContent).toContain('PV Austria');
     });
   });
 });

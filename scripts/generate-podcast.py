@@ -463,6 +463,18 @@ def main():
         # Remove existing episode with same slug if present
         episodes = [e for e in episodes if e.get("slug") != date_str]
         
+        # Map news_items to sources format
+        news_items = cache.get("news_items", [])
+        if news_items:
+            episode["sources"] = [
+                {
+                    "title": item.get("title", ""),
+                    "url": item.get("url", ""),
+                    "source": item.get("source", "")
+                }
+                for item in news_items
+            ]
+        
         # Add new episode
         episodes.append(episode)
         save_episodes(episodes)

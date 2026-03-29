@@ -4,6 +4,12 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
+interface Source {
+  title: string;
+  url: string;
+  source: string;
+}
+
 interface Episode {
   slug: string;
   title: string;
@@ -12,6 +18,7 @@ interface Episode {
   summary: string;
   transcript: string;
   audioFile: string;
+  sources?: Source[];
 }
 
 function formatDate(dateStr: string): string {
@@ -36,9 +43,14 @@ function EpisodeCard({ episode }: { episode: Episode }) {
             <span>•</span>
             <span>Dauer: {episode.duration}</span>
           </div>
-          <p className="text-gray-300 mb-4 leading-relaxed">
+          <p className="text-gray-300 mb-2 leading-relaxed">
             {episode.summary}
           </p>
+          {episode.sources && episode.sources.length > 0 && (
+            <p className="text-xs text-gray-500">
+              {episode.sources.length} Quellen
+            </p>
+          )}
         </div>
         <div className="md:w-64 flex-shrink-0">
           <audio
@@ -121,6 +133,28 @@ function EpisodeDetail({ episode }: { episode: Episode }) {
               {episode.transcript}
             </div>
           </div>
+
+          {episode.sources && episode.sources.length > 0 && (
+            <div className="border-t border-gray-800 pt-8 mt-8">
+              <h2 className="text-sm font-semibold text-gray-400 mb-4 uppercase tracking-wide">Quellen</h2>
+              <ul className="space-y-2">
+                {episode.sources.map((src, index) => (
+                  <li key={index} className="text-xs text-gray-500">
+                    <span className="text-gray-600">{index + 1}.</span>{' '}
+                    <a
+                      href={src.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-400 hover:text-cyan-400 transition-colors"
+                    >
+                      {src.title}
+                    </a>
+                    <span className="text-gray-600"> — {src.source}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </article>
     </div>
