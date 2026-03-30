@@ -457,23 +457,33 @@ def main():
         duration = get_audio_duration(date_str, log)
         episode["duration"] = duration
 
-        # Step 5: Update episodes.json
+        # Step 5: Embed actual transcript text (not path)
+        transcript_file = CACHE_DIR / f"podcast-{date_str}-transcript.txt"
+        if transcript_file.exists():
+            episode["transcript"] = transcript_file.read_text(encoding="utf-8").strip()
+        else:
+            log(f"WARNING: Transcript file not found: {transcript_file}")
+
+        # Step 6: Load news from scrape-news.py output and map to sources
+        news_file = CACHE_DIR / f"podcast-{date_str}-news.json"
+        if news_file.exists():
+            news_data = json.loads(news_file.read_text())
+            episode["sources"] = [
+                {"title": a["title"], "url": a["url"], "source": a["source"]}
+                for a in news_data.get("articles", [])
+            ]
+        else:
+            log(f"WARNING: News cache not found: {news_file}")
+            episode["sources"] = []
+
+        # Step 7: Ensure audioFile has clean path
+        episode["audioFile"] = f"{date_str}.mp3"
+
+        # Step 8: Update episodes.json
         episodes = load_episodes()
         
         # Remove existing episode with same slug if present
         episodes = [e for e in episodes if e.get("slug") != date_str]
-        
-        # Map news_items to sources format
-        news_items = cache.get("news_items", [])
-        if news_items:
-            episode["sources"] = [
-                {
-                    "title": item.get("title", ""),
-                    "url": item.get("url", ""),
-                    "source": item.get("source", "")
-                }
-                for item in news_items
-            ]
         
         # Add new episode
         episodes.append(episode)
