@@ -17,10 +17,13 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="border-b border-gray-800 dark:bg-gray-900 bg-white">
+    <header className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
       <nav className="max-w-5xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-cyan-400 hover:text-cyan-300 dark:text-cyan-400 dark:hover:text-cyan-300">
+          <Link
+            href="/"
+            className="text-xl font-bold text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300"
+          >
             Jo
           </Link>
 
@@ -32,8 +35,8 @@ export default function Header() {
                 href={link.href}
                 className={`text-sm font-medium transition-colors ${
                   pathname === link.href
-                    ? 'text-cyan-400 underline underline-offset-4'
-                    : 'text-gray-300 hover:text-white dark:text-gray-300 dark:hover:text-white'
+                    ? 'text-cyan-600 dark:text-cyan-400 underline underline-offset-4'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
                 {link.label}
@@ -46,7 +49,7 @@ export default function Header() {
           <div className="flex items-center gap-4 md:hidden">
             <ThemeToggle />
             <button
-              className="text-gray-300 hover:text-white dark:text-gray-300 dark:hover:text-white"
+              className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
             >
@@ -70,8 +73,8 @@ export default function Header() {
                 href={link.href}
                 className={`text-sm font-medium transition-colors ${
                   pathname === link.href
-                    ? 'text-cyan-400 underline underline-offset-4'
-                    : 'text-gray-300 hover:text-white dark:text-gray-300 dark:hover:text-white'
+                    ? 'text-cyan-600 dark:text-cyan-400 underline underline-offset-4'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
