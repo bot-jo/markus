@@ -9,6 +9,7 @@ const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/rezepte', label: 'Rezepte' },
   { href: '/podcast', label: 'Podcast' },
+  { href: '/einkaufsliste', label: 'Einkauf' },
   { href: '/impostor-game', label: 'Impostor Game' },
 ];
 
