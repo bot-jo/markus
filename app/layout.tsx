@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ThemeProvider } from 'next-themes';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import './globals.css';
@@ -14,13 +15,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de">
-      <body className="bg-gray-950 text-gray-100 min-h-screen flex flex-col">
-        <Header />
-        <main className="max-w-5xl mx-auto px-6 py-12 w-full flex-1">
-          {children}
-        </main>
-        <Footer />
+    <html lang="de" suppressHydrationWarning>
+      <body className="min-h-screen flex flex-col">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+          storageKey="jo-theme"
+        >
+          <Header />
+          <main className="max-w-5xl mx-auto px-6 py-12 w-full flex-1">
+            {children}
+          </main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

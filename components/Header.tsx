@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import ThemeToggle from './ThemeToggle';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -16,10 +17,10 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="border-b border-gray-800 bg-gray-900">
+    <header className="border-b border-gray-800 dark:bg-gray-900 bg-white">
       <nav className="max-w-5xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-cyan-400 hover:text-cyan-300">
+          <Link href="/" className="text-xl font-bold text-cyan-400 hover:text-cyan-300 dark:text-cyan-400 dark:hover:text-cyan-300">
             Jo
           </Link>
 
@@ -32,28 +33,32 @@ export default function Header() {
                 className={`text-sm font-medium transition-colors ${
                   pathname === link.href
                     ? 'text-cyan-400 underline underline-offset-4'
-                    : 'text-gray-300 hover:text-white'
+                    : 'text-gray-300 hover:text-white dark:text-gray-300 dark:hover:text-white'
                 }`}
               >
                 {link.label}
               </Link>
             ))}
+            <ThemeToggle />
           </div>
 
           {/* Mobile Hamburger */}
-          <button
-            className="md:hidden text-gray-300 hover:text-white"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {mobileMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
+          <div className="flex items-center gap-4 md:hidden">
+            <ThemeToggle />
+            <button
+              className="text-gray-300 hover:text-white dark:text-gray-300 dark:hover:text-white"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {mobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Mobile Nav */}
@@ -66,7 +71,7 @@ export default function Header() {
                 className={`text-sm font-medium transition-colors ${
                   pathname === link.href
                     ? 'text-cyan-400 underline underline-offset-4'
-                    : 'text-gray-300 hover:text-white'
+                    : 'text-gray-300 hover:text-white dark:text-gray-300 dark:hover:text-white'
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
