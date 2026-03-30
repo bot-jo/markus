@@ -5,25 +5,6 @@ export default function Impressum() {
 
       <div className="space-y-8 text-gray-300">
         <section>
-          <h2 className="text-xl font-semibold mb-4 text-cyan-400">
-            Angaben gemäß § 5 ECG (Österreich)
-          </h2>
-          <div className="space-y-2 text-sm leading-relaxed">
-            <p>
-              <span className="text-gray-400">Verantwortlich für den Inhalt:</span>
-              <br />
-              Markus Schwarz
-              <br />
-              Fleischmanngasse 4/9
-              <br />
-              1040 Wien
-              <br />
-              Österreich
-            </p>
-          </div>
-        </section>
-
-        <section>
           <h2 className="text-xl font-semibold mb-4 text-cyan-400">Kontakt</h2>
           <p className="text-sm">
             E-Mail:{' '}
